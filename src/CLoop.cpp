@@ -37,42 +37,32 @@ void CLoop::Loop(float lumFactor, int z_sample, std::string key, const CLoopConf
         Long64_t ientry = LoadTree(jentry);
         if (ientry < 0) break;
         nb = fChain->GetEntry(jentry,0);    nbytes += nb;
-
-        // Variable defining regions
-        // DELTA RAPIDITY 2-JETS
-        double delta_y = abs(ljet_0_p4->Rapidity()-ljet_1_p4->Rapidity());
-        // Z BOSON CENTRALITY
-        double lepton_xi=((*tau_0_p4)+(*muon_0_p4)).Rapidity();
-        double dijet_xi=ljet_0_p4->Rapidity()+ljet_1_p4->Rapidity();
-        double z_centrality=abs(lepton_xi-0.5*dijet_xi)/delta_y;
-
-        Region region = Region::DefaultNoRW;
-        if (z_centrality<0.5){region = Region::SR;}
-        else if (z_centrality<=1.0){region = Region::CR;}
-
-        double mjj = sqrt(2*(ljet_0_p4->Dot(*ljet_1_p4)));
-        double mjj_w = 1.0;
-
-        // mjj reweighting
-        bool reweight_mjj = config.m_reweightMjj;
-        if (reweight_mjj){
-            MC mcSample = static_cast<MC>(z_sample);
-            if(mcSample == MC::PowHegPythia){
-                mjj_w = 1.0;
-            } else if (mcSample == MC::SHERPA){
-                mjj_w = mjj_rw(mjj,parametersSHERPA[region]); 
-            } else if (mcSample == MC::MadGraph){ 
-                mjj_w = mjj_rw(mjj,parametersMadGraph[region]);
-            }
-        }
         double eventWeight = 1;
         // check if event is from real data
         if (!(key.substr(0,4)=="data")) {
             if (!(NOMINAL_pileup_combined_weight > -1)) continue; // TO AVOID FILLING HUGE WEIGHTS IN EWK Sample
             // take product of all scale factors
-            eventWeight = weight_mc*NOMINAL_pileup_combined_weight*lumFactor*mjj_w
+            /*
+            std::cout << "weight_mc: " << weight_mc << std::endl;
+            std::cout << "NOMINAL_pileup_combined_weight: " << NOMINAL_pileup_combined_weight << std::endl;
+            std::cout << "lumFactor: " << lumFactor << std::endl;
+            std::cout << "mjj_w: " << mjj_w << std::endl;
+            std::cout << "muon_0_NOMINAL_MuEffSF_HLT_mu26_ivarmedium_OR_HLT_mu50_QualMedium: " << muon_0_NOMINAL_MuEffSF_HLT_mu26_ivarmedium_OR_HLT_mu50_QualMedium << std::endl;
+            std::cout << "muon_0_NOMINAL_MuEffSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50_QualMedium: " << muon_0_NOMINAL_MuEffSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50_QualMedium << std::endl;
+            std::cout << "muon_0_NOMINAL_MuEffSF_IsoTightTrackOnly_FixedRad: " << muon_0_NOMINAL_MuEffSF_IsoTightTrackOnly_FixedRad << std::endl;
+            std::cout << "muon_0_NOMINAL_MuEffSF_Reco_QualMedium: " << muon_0_NOMINAL_MuEffSF_Reco_QualMedium << std::endl;
+            std::cout << "jet_NOMINAL_central_jets_global_effSF_JVT: " << jet_NOMINAL_central_jets_global_effSF_JVT << std::endl;
+            std::cout << "jet_NOMINAL_central_jets_global_ineffSF_JVT: " << jet_NOMINAL_central_jets_global_ineffSF_JVT << std::endl;
+            std::cout << "jet_NOMINAL_forward_jets_global_effSF_JVT: " << jet_NOMINAL_forward_jets_global_effSF_JVT << std::endl;
+            std::cout << "jet_NOMINAL_forward_jets_global_ineffSF_JVT: " << jet_NOMINAL_forward_jets_global_ineffSF_JVT << std::endl;
+            std::cout << "jet_NOMINAL_global_effSF_MV2c10_FixedCutBEff_85: " << jet_NOMINAL_global_effSF_MV2c10_FixedCutBEff_85 << std::endl;
+            std::cout << "jet_NOMINAL_global_ineffSF_MV2c10_FixedCutBEff_85: " << jet_NOMINAL_global_ineffSF_MV2c10_FixedCutBEff_85 << std::endl;
+            std::cout << "tau_0_NOMINAL_TauEffSF_reco: " << tau_0_NOMINAL_TauEffSF_reco << std::endl;
+            std::cout << "tau_0_NOMINAL_TauEffSF_JetRNNmedium: " << tau_0_NOMINAL_TauEffSF_JetRNNmedium << std::endl;
+            */
+            eventWeight = weight_mc*NOMINAL_pileup_combined_weight*lumFactor /*
             *muon_0_NOMINAL_MuEffSF_HLT_mu26_ivarmedium_OR_HLT_mu50_QualMedium*muon_0_NOMINAL_MuEffSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50_QualMedium
-            *muon_0_NOMINAL_MuEffSF_IsoTightTrackOnly_FixedRad*muon_0_NOMINAL_MuEffSF_Reco_QualMedium/*muon_0_NOMINAL_MuEffSF_TTVA*/
+            *muon_0_NOMINAL_MuEffSF_IsoTightTrackOnly_FixedRad*muon_0_NOMINAL_MuEffSF_Reco_QualMedium // muon_0_NOMINAL_MuEffSF_TTVA */
             *jet_NOMINAL_central_jets_global_effSF_JVT*jet_NOMINAL_central_jets_global_ineffSF_JVT*jet_NOMINAL_forward_jets_global_effSF_JVT
             *jet_NOMINAL_forward_jets_global_ineffSF_JVT*jet_NOMINAL_global_effSF_MV2c10_FixedCutBEff_85*jet_NOMINAL_global_ineffSF_MV2c10_FixedCutBEff_85
             *tau_0_NOMINAL_TauEffSF_reco*tau_0_NOMINAL_TauEffSF_JetRNNmedium;

@@ -6,6 +6,7 @@
 
 double del_phi(double phi_1, double phi_2);
 double min_deltaR(TLorentzVector* test_particle, std::vector<UInt_t>& bool_vector_container,const std::vector<TLorentzVector*>& jet_container);
+float metProjectionClosestLepton(TLorentzVector* met, TLorentzVector* muon, TLorentzVector* tau); // tutorial
 
 void CLoop::Fill(double weight, int z_sample, const std::string& sampleName) {
   double pi=TMath::Pi();
@@ -56,19 +57,21 @@ void CLoop::Fill(double weight, int z_sample, const std::string& sampleName) {
 
       // Handling BDT
       float bdt_transmasslep = inv_taulep > 200 ? transverseMassLep/std::pow(inv_taulep,0.3) : transverseMassLep/std::pow(200,0.3); // for transverse-reco mass ratio
+      float metProjecClosestLep = metProjectionClosestLepton(met_reco_p4,muon_0_p4,tau_0_p4); // tutorial
       m_vbfBDT.update(mjj, 0.0, 0.0, 0.0, 0.0, bdt_transmasslep, event_number);
       double VBFBDT_score = m_vbfBDT.evaluate();
     
       // Cuts vector
-      std::vector<int> cuts={0,0,0,0,0,0};
+      std::vector<int> cuts={0,0,0,0,0,0,0}; // tutorial
       // CUTS
-      if (angle<=2.5){cuts[0]=1;}
+      if (angle<=2.0){cuts[0]=1;}
       if(muon_0_p4->Pt()>=30){cuts[1]=1;}
       if (tau_0_p4->Pt()>=35){cuts[2]=1;}
       if(ljet_0_p4->Pt()>=75){cuts[3]=1;}
       if(mjj>=1000){cuts[4]=1;} 
       bool diLeptonMassRequirement =  inv_taulep >= 70;
       if (diLeptonMassRequirement){cuts[5]=1;}
+      if (metProjecClosestLep>=30){cuts[6]=1;} // tutorial
       
 
       // SUM OF THE VECTOR STORING IF CUTS PASS OR NOT
@@ -101,6 +104,7 @@ void CLoop::Fill(double weight, int z_sample, const std::string& sampleName) {
       delta_R_lepjetContainer.Fill(min_dR_lep,weight,cutsVector);
       delta_R_taujetContainer.Fill(min_dR_tau,weight,cutsVector);
       Z_ptContainer.Fill(truth_z_pt,weight,notFullCutsVector);
+      metProjecClosestLepContainer.Fill(metProjecClosestLep,weight,cutsVector); // tutorial
 
       if (tau_0_n_charged_tracks==1) rnn_score_1pContainer.Fill(tau_0_jet_rnn_score_trans,weight,notFullCutsVector);
       if (tau_0_n_charged_tracks==3) rnn_score_3pContainer.Fill(tau_0_jet_rnn_score_trans,weight,notFullCutsVector);
@@ -166,8 +170,10 @@ void CLoop::FillTree(double weight, int z_sample, const std::string& sampleName)
       // Transverse mass
       double transverseMassLep = sqrt(2*muon_0_p4->Pt()*met_reco_p4->Pt()*(1-cos(muon_0_p4->Phi()-met_reco_p4->Phi())));
 
+      float metProjecClosestLep = metProjectionClosestLepton(met_reco_p4,muon_0_p4,tau_0_p4); // tutorial
+
         // Cuts vector
-      std::vector<int> cuts={0,0,0,0,0,0};
+      std::vector<int> cuts={0,0,0,0,0,0,0}; // tutorial
       // CUTS
       if (angle<=2.5){cuts[0]=1;}
       if(muon_0_p4->Pt()>=30){cuts[1]=1;}
@@ -176,6 +182,7 @@ void CLoop::FillTree(double weight, int z_sample, const std::string& sampleName)
       if(mjj>=1000){cuts[4]=1;} 
       bool diLeptonMassRequirement =  inv_taulep >= 70;
       if (diLeptonMassRequirement){cuts[5]=1;}
+      if (metProjecClosestLep>=30){cuts[6]=1;} // tutorial
 
       // SUM OF THE VECTOR STORING IF CUTS PASS OR NOT
       size_t sum{0};
@@ -202,6 +209,7 @@ void CLoop::FillTree(double weight, int z_sample, const std::string& sampleName)
         m_signalTree.m_jet1_pT = ljet_1_p4->Pt();
         m_signalTree.m_met_pT = met_reco_p4->Pt();
         m_signalTree.m_event_number = event_number;
+        m_signalTree.m_metProjection = metProjecClosestLep; // tutorial
         // Fill tree
         m_signalTree.FillTree();
       } else {
@@ -217,6 +225,7 @@ void CLoop::FillTree(double weight, int z_sample, const std::string& sampleName)
         m_backgroundTree.m_jet1_pT = ljet_1_p4->Pt();
         m_backgroundTree.m_met_pT = met_reco_p4->Pt();
         m_backgroundTree.m_event_number = event_number;
+        m_backgroundTree.m_metProjection = metProjecClosestLep; // tutorial
         // Fill tree
         m_backgroundTree.FillTree();
       }

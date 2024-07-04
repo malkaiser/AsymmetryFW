@@ -17,4 +17,10 @@ OutputTree::OutputTree(const char* treeName, const char* treeDescription){
     m_Tree->Branch("jet1_p4", &m_jet1_pT);
     m_Tree->Branch("met_p4", &m_met_pT);
     m_Tree->Branch("eventNumber", &m_event_number);
+    
+    m_Tree->Branch("mWT", &m_mWT); // m_mET
+    m_Tree->Branch("mET", &m_mET); // m_mWT
+    m_Tree->Branch("m3_star", &m_m3_star); // m3_star
+    m_Tree->Branch("sigmaCosDelPhi", &m_sigmaCosDelPhi); // novel selection
+    m_Tree->Branch("n_bjets", &m_n_bjets); // n_bjets
 }

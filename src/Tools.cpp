@@ -74,3 +74,33 @@ double min_deltaR(TLorentzVector* test_particle, std::vector<UInt_t>& bool_vecto
   double min_dR=*std::min_element(delta_Rs.begin(),delta_Rs.end());
   return min_dR;
 }
+
+// tutorial
+float metProjectionClosestLepton(TLorentzVector* met, TLorentzVector* muon, TLorentzVector* tau){
+  // Calculate the delta phi between the MET, the muon and the tau
+  double deltaPhiMuon = del_phi(muon->Phi(), met->Phi());
+  double deltaPhiTau = del_phi(tau->Phi(), met->Phi());
+  // Check which one is the closest
+  bool muonIsClosest = deltaPhiMuon < deltaPhiTau;
+  // Calculate the projection
+  float projection = muonIsClosest ? met->Pt() * cos(deltaPhiMuon) : met->Pt() * cos(deltaPhiTau);
+  return projection;
+
+}
+
+float sigmaCosDeltaPhi(TLorentzVector* met, TLorentzVector* lepton, TLorentzVector* tau){
+  return cos(del_phi(met->Phi(), tau->Phi())) + cos(del_phi(met->Phi(), lepton->Phi()));
+}
+
+float m3_star(TLorentzVector* met, TLorentzVector* negative_lepton, TLorentzVector* positive_lepton) {
+  float mT_combined = sqrt(met->Mt2() + negative_lepton->Mt2() + positive_lepton->Mt2());
+  float cosThetaEtaStar = tanh((negative_lepton->PseudoRapidity()-positive_lepton->PseudoRapidity())/2);
+  float sinThetaEtaStar = sqrt(1-cosThetaEtaStar*cosThetaEtaStar);
+  float m3_star = mT_combined/sinThetaEtaStar;
+  return m3_star;
+}
+
+float W_transverse_mass(TLorentzVector* met, TLorentzVector* lepton){
+  float transverse_mass = sqrt(2*(lepton->Pt())*(met->Et())*(1-cos(del_phi(lepton->Phi(),met->Phi()))));
+  return transverse_mass;
+}

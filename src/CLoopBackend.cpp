@@ -746,6 +746,7 @@ void CLoop::ActivateBranches(const std::string& key){
     fChain->SetBranchStatus("muTrigMatch_0_HLT_mu26_ivarmedium",1);
     fChain->SetBranchStatus("muTrigMatch_0_HLT_mu50",1);
     fChain->SetBranchStatus("muTrigMatch_0_trigger_matched",1);
+// Muon
     fChain->SetBranchStatus("muon_0",1);
     fChain->SetBranchStatus("muon_0_NOMINAL_MuEffSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50_QualMedium",1);
     fChain->SetBranchStatus("muon_0_NOMINAL_MuEffSF_HLT_mu26_ivarmedium_OR_HLT_mu50_QualMedium",1);
@@ -763,6 +764,19 @@ void CLoop::ActivateBranches(const std::string& key){
     fChain->SetBranchStatus("muon_0_iso_TightTrackOnly_FixedRad",1);
     fChain->SetBranchStatus("muon_0_p4",1);
     fChain->SetBranchStatus("muon_0_q",1);
+// Electron
+    fChain->SetBranchStatus("elec_0",1);
+    fChain->SetBranchStatus("elec_0_id_medium",1);
+    fChain->SetBranchStatus("elec_0_iso_FCLoose",1);
+    fChain->SetBranchStatus("elec_0_iso_FCTight",1);
+    fChain->SetBranchStatus("elec_0_iso_FixedCutLoose",1);
+    fChain->SetBranchStatus("elec_0_iso_FixedCutTight",1);
+    fChain->SetBranchStatus("elec_0_iso_FixedCutTightCaloOnly",1);
+    fChain->SetBranchStatus("elec_0_iso_Loose_FixedRad",1);
+    fChain->SetBranchStatus("elec_0_iso_TightTrackOnly_FixedRad",1);
+    fChain->SetBranchStatus("elec_0_p4",1);
+    fChain->SetBranchStatus("elec_0_q",1);
+
     fChain->SetBranchStatus("n_bjets_MV2c10_FixedCutBEff_85",1);
     fChain->SetBranchStatus("n_electrons",1);
     fChain->SetBranchStatus("n_jets",1);
@@ -773,6 +787,7 @@ void CLoop::ActivateBranches(const std::string& key){
     fChain->SetBranchStatus("n_taus_rnn_tight",1);
     fChain->SetBranchStatus("n_taus_rnn_veryloose",1);
     fChain->SetBranchStatus("run_number",1);
+// Tau
     fChain->SetBranchStatus("tau_0",1);
     fChain->SetBranchStatus("tau_0_NOMINAL_TauEffSF_JetRNNloose",1);
     fChain->SetBranchStatus("tau_0_NOMINAL_TauEffSF_JetRNNmedium",1);
@@ -850,6 +865,19 @@ void CLoop::ActivateBranches(const std::string& key){
     fChain->SetBranchStatus("muon_0_iso_TightTrackOnly_FixedRad",1);
     fChain->SetBranchStatus("muon_0_p4",1);
     fChain->SetBranchStatus("muon_0_q",1);
+// Electron
+    fChain->SetBranchStatus("elec_0",1);
+    fChain->SetBranchStatus("elec_0_id_medium",1);
+    fChain->SetBranchStatus("elec_0_iso_FCLoose",1);
+    fChain->SetBranchStatus("elec_0_iso_FCTight",1);
+    fChain->SetBranchStatus("elec_0_iso_FixedCutLoose",1);
+    fChain->SetBranchStatus("elec_0_iso_FixedCutTight",1);
+    fChain->SetBranchStatus("elec_0_iso_FixedCutTightCaloOnly",1);
+    fChain->SetBranchStatus("elec_0_iso_Loose_FixedRad",1);
+    fChain->SetBranchStatus("elec_0_iso_TightTrackOnly_FixedRad",1);
+    fChain->SetBranchStatus("elec_0_p4",1);
+    fChain->SetBranchStatus("elec_0_q",1);
+    
     fChain->SetBranchStatus("n_bjets_MV2c10_FixedCutBEff_85",1);
     fChain->SetBranchStatus("n_electrons",1);
     fChain->SetBranchStatus("n_jets",1);
