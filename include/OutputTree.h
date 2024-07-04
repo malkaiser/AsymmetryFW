@@ -33,4 +33,10 @@ class OutputTree {
     double m_jet1_pT;
     double m_met_pT;
     double m_event_number;
+
+    double m_mWT;
+    double m_mET;
+    double m_m3_star;
+    double m_sigmaCosDelPhi;
+    double m_n_bjets;
 };

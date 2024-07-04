@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "CLoop.h"
+#include "Adder.h"
 #include "TFile.h"
 #include "TTree.h"
 
@@ -14,12 +15,15 @@ BOOST_PYTHON_MODULE(AnalysisFW)
     class_<CLoopWrapper>("CLoop", init<long long unsigned int, std::string>())
         .def("Loop", &CLoopWrapper::Loop)
     ;
-
+    
     class_<CLoopConfig>("CLoopConfig", init<bool, bool, bool, std::string>())
         .def_readwrite("m_saveHistograms", &CLoopConfig::m_saveHistograms)
         .def_readwrite("m_saveEvents", &CLoopConfig::m_saveEvents)
         .def_readwrite("m_reweightMjj", &CLoopConfig::m_reweightMjj)
         .def_readwrite("m_bdtWeightsPath", &CLoopConfig::m_bdtWeightsPath)
         .enable_pickling()
+    ;
+    class_<RootAdderWrapper>("Adder", init<std::string, std::string>())
+        .def("AddTrees", &RootAdderWrapper::AddTrees)
     ;
 }

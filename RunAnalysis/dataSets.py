@@ -14,7 +14,7 @@ except:
         remote = False
 
 try:
-  pathsToSamplesList = v26Paths[username]
+  pathsToSamplesList = v26Paths['SHARED'] # changed USER to 'SHARED'
   samples = []
   dirs = []
   for path in pathsToSamplesList:

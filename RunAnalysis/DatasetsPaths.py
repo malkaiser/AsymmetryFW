@@ -22,6 +22,7 @@ if username in v26Paths:
     v26Paths[username] = paths
 else:
     v26Paths[username] = [findMainPath()+'/data/']
+    v26Paths['SHARED'] = ['/gluster/data/atlas/dbaron/v26/'] # added
 
 if __name__ == "__main__":
     print("This file is not meant to be executed --- it is a library of paths for the analysis datasets.")
