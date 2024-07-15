@@ -6,7 +6,7 @@ find_package(ROOT 6.16 CONFIG REQUIRED)
 
 # Add a shared module - modules are intended to be imported at runtime.
 # - This is where you add the source files
-add_library(Analysis SHARED CLoop.cpp CLoopBackend.cpp RootAdder.cpp AnalysisElectron.cpp Tools.cpp OutputTree.cpp HistogramContainer.cpp)
+add_library(Analysis SHARED CLoop.cpp CLoopBackend.cpp RootAdder.cpp SRMuonChannel.cpp Tools.cpp OutputTree.cpp HistogramContainer.cpp)
 set_target_properties(Analysis PROPERTIES SUFFIX ".so")
 
 # Set up the libraries and header search paths for this target

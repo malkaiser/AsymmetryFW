@@ -13,8 +13,7 @@ void CLoop::Loop(float lumFactor, int z_sample, std::string key, const CLoopConf
     if (fChain == 0) return;
 
     Long64_t nentries = fChain->GetEntriesFast();
-
-    // if in fast mode only loop over 1% of the entries
+    
     Long64_t nLoop = nentries;
 
     std::cout<<"Analysing "<<nLoop<<" Events!"<<std::endl;

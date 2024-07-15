@@ -89,18 +89,29 @@ float metProjectionClosestLepton(TLorentzVector* met, TLorentzVector* muon, TLor
 }
 
 float sigmaCosDeltaPhi(TLorentzVector* met, TLorentzVector* lepton, TLorentzVector* tau){
-  return cos(del_phi(met->Phi(), tau->Phi())) + cos(del_phi(met->Phi(), lepton->Phi()));
+  return cos(del_phi(met->Phi(), lepton->Phi())) + cos(del_phi(met->Phi(), tau->Phi()));
+}
+
+float visible_mass(TLorentzVector* lepton, TLorentzVector* tau){
+  float add_square = ((lepton->E()+tau->E())*(lepton->E()+tau->E()));
+  TVector3 vector = lepton->Vect() + tau->Vect();
+  float add = sqrt(add_square-vector.Mag2());
+  return add;
 }
 
 float m3_star(TLorentzVector* met, TLorentzVector* negative_lepton, TLorentzVector* positive_lepton) {
-  float mT_combined = sqrt(met->Mt2() + negative_lepton->Mt2() + positive_lepton->Mt2());
-  float cosThetaEtaStar = tanh((negative_lepton->PseudoRapidity()-positive_lepton->PseudoRapidity())/2);
+  TLorentzVector met_negative_lepton = met->operator+(*negative_lepton);
+  TLorentzVector met_positive_lepton = met->operator+(*positive_lepton);
+  TLorentzVector negative_positive_lepton = negative_lepton->operator+(*positive_lepton);
+  float mT_combined = sqrt(met_negative_lepton.Mt2() + met_positive_lepton.Mt2() + negative_positive_lepton.Mt2());
+  float cosThetaEtaStar = tanh((negative_lepton->Eta()-positive_lepton->Eta())/2);
   float sinThetaEtaStar = sqrt(1-cosThetaEtaStar*cosThetaEtaStar);
   float m3_star = mT_combined/sinThetaEtaStar;
   return m3_star;
 }
 
 float W_transverse_mass(TLorentzVector* met, TLorentzVector* lepton){
-  float transverse_mass = sqrt(2*(lepton->Pt())*(met->Et())*(1-cos(del_phi(lepton->Phi(),met->Phi()))));
+  float delta_phi = del_phi(lepton->Phi(),met->Phi());
+  float transverse_mass = sqrt(2*(lepton->Pt())*(met->Et())*(1-cos(delta_phi)));
   return transverse_mass;
 }

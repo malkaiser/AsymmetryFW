@@ -23,4 +23,9 @@ OutputTree::OutputTree(const char* treeName, const char* treeDescription){
     m_Tree->Branch("m3_star", &m_m3_star); // m3_star
     m_Tree->Branch("sigmaCosDelPhi", &m_sigmaCosDelPhi); // novel selection
     m_Tree->Branch("n_bjets", &m_n_bjets); // n_bjets
+    m_Tree->Branch("tauProngs",&m_tauProngs);
+    m_Tree->Branch("tau1ProngScore",&m_tau1ProngScore);
+    m_Tree->Branch("tau3ProngScore",&m_tau3ProngScore);
+    m_Tree->Branch("mVis",&m_mVis);
+    m_Tree->Branch("m3star",&m_m3star);
 }

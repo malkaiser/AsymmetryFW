@@ -39,4 +39,9 @@ class OutputTree {
     double m_m3_star;
     double m_sigmaCosDelPhi;
     double m_n_bjets;
+    double m_tauProngs;
+    double m_tau1ProngScore;
+    double m_tau3ProngScore;
+    double m_mVis;
+    double m_m3star;
 };

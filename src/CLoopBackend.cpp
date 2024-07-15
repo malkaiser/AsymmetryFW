@@ -774,6 +774,12 @@ void CLoop::ActivateBranches(const std::string& key){
     fChain->SetBranchStatus("elec_0_iso_FixedCutTightCaloOnly",1);
     fChain->SetBranchStatus("elec_0_iso_Loose_FixedRad",1);
     fChain->SetBranchStatus("elec_0_iso_TightTrackOnly_FixedRad",1);
+    fChain->SetBranchStatus("elec_0_NOMINAL_EleEffSF_Isolation_TightLLH_d0z0_v13_FCLoose", 1);
+    fChain->SetBranchStatus("elec_0_NOMINAL_EleEffSF_Isolation_TightLLH_d0z0_v13_FCTight", 1);
+    fChain->SetBranchStatus("elec_0_NOMINAL_EleEffSF_SINGLE_E_2015_e24_lhmedium_L1EM20VH_OR_e60_lhmedium_OR_e120_lhloose_2016_2018_e26_lhtight_nod0_ivarloose_OR_e60_lhmedium_nod0_OR_e140_lhloose_nod0_TightLLH_d0z0_v13_isolFCTight", 1);
+    fChain->SetBranchStatus("elec_0_NOMINAL_EleEffSF_offline_RecoTrk", 1);
+    fChain->SetBranchStatus("elec_0_NOMINAL_EleEffSF_offline_TightLLH_d0z0_v13", 1);
+    fChain->SetBranchStatus("elec_0_NOMINAL_efficiency_SINGLE_E_2015_e24_lhmedium_L1EM20VH_OR_e60_lhmedium_OR_e120_lhloose_2016_2018_e26_lhtight_nod0_ivarloose_OR_e60_lhmedium_nod0_OR_e140_lhloose_nod0_TightLLH_d0z0_v13_isolFCTight", 1);
     fChain->SetBranchStatus("elec_0_p4",1);
     fChain->SetBranchStatus("elec_0_q",1);
 
