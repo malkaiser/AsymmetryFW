@@ -445,15 +445,55 @@ def stackPlot(data,signal,background,histograms,watermark,function,additionalSig
                     try:
                         error = difference.GetBinContent(j)*rQCD*np.sqrt((difference.GetBinError(j)/difference.GetBinContent(j))**2+(errQCD/rQCD)**2)
                     except ZeroDivisionError:
-                        error = 0
+                        error = difference.GetBinContent(j)
                     export_hist.SetBinContent(j,difference.GetBinContent(j)*rQCD)
                     export_hist.SetBinError(j,error)
                 save_file.WriteObject(export_hist,i.m_name)
         if "_pt_basic_all" in i.m_name:
+            array = np.empty((0,3))
+            array2 = np.zeros(20)
             for s in samples:
+                integral = round(samples[s][2].Integral(0,samples[s][2].GetNbinsX(),"width"))
+                err = round(np.sqrt((samples[s][2].GetSumw2()).GetSum()))
+                if err < 1:
+                    err = 1
+                if s=="Data":
+                    array2[0] = integral
+                    array2[1] = err
+                if s=="W+jets":
+                    array2[2] = integral
+                    array2[3] = err
+                if s=="Signal":
+                    array2[4] = integral
+                    array2[5] = err
+                if s=="Zmumu":
+                    array2[6] = integral
+                    array2[7] = err
+                if s=="ttbar":
+                    array2[8] = integral
+                    array2[9] = err
+                if s=="singletop":
+                    array2[10] = integral
+                    array2[11] = err
+                if s=="VV":
+                    array2[12] = integral
+                    array2[13] = err
+                if s=="VBF":
+                    array2[14] = integral
+                    array2[15] = err
+                if s=="Higgs":
+                    array2[16] = integral
+                    array2[17] = err
+                if s=="difference":
+                    array2[18] = integral
+                    array2[19] = err
                 print(s+": "+str(samples[s][2].Integral(0,samples[s][2].GetNbinsX(),"width")), "Error: "+str(np.sqrt((samples[s][2].GetSumw2()).GetSum())))
-        ###### SETTING THE COLOURS ######
-
+                array = np.vstack((array,np.array([s,samples[s][2].Integral(0,samples[s][2].GetNbinsX(),"width"),np.sqrt((samples[s][2].GetSumw2()).GetSum())])))
+            txtname = i.m_name+'.txt'
+            txtname2 = i.m_name+'_latex'+'.txt'
+            np.savetxt(txtname,array,fmt = '%s')
+            np.savetxt(txtname2,array2,fmt = '%.0f', newline = ' & ')
+            ###### SETTING THE COLOURS ######
         for s in samples:
             if s=="Data":
                 samples[s][2].SetMarkerStyle(20)
@@ -663,9 +703,9 @@ def stackPlot(data,signal,background,histograms,watermark,function,additionalSig
         regionText.SetTextAlign(22)
         regionText.SetTextFont(43)
         regionText.SetTextSize(17)
-        #regionText.Draw("same")
         l.SetTextAlign(21)
         l.DrawLatex(0.5,0.95,regionLabel)
+        #regionText.Draw("same")    
         '''
         vbfNormText.SetNDC ()
         vbfNormText.SetTextAlign(22)
