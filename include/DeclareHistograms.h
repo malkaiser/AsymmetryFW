@@ -34,8 +34,8 @@ histogramContainer sigma_cos_del_phiContainer{"sigma_cos_del_phi","Sum of cos de
 
 // SR
 
-histogramContainer m3_starContainer{"m3_star","Novel selection m3_star",200,0,200,cutNames,"m3"}; // m3_star
-histogramContainer m_visContainer{"m_vis", "Visible mass of dilepton",200,0,200,cutNames,"mvis"};
+histogramContainer m3_starContainer{"m3_star","Novel selection m3_star",300,0,300,cutNames,"m3"}; // m3_star
+histogramContainer m_visContainer{"m_vis", "Visible mass of dilepton",300,0,300,cutNames,"mvis"};
 histogramContainer mWTContainer{"mWT","Reconstructed W transverse mass",160,0,160,notFull};
 histogramContainer mETContainer{"mET","Reconstructed missing transverse energy",160,0,160,notFull};
 

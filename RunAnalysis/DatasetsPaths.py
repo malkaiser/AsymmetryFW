@@ -15,6 +15,7 @@ v26Paths = {
 
 # Set up the example path for the analysis depending on the user machine name.
 # If the user is not in the list, add the default path.
+'''
 username = os.environ['USER']
 if username in v26Paths:
     paths = v26Paths[username]
@@ -23,6 +24,7 @@ if username in v26Paths:
 else:
     v26Paths[username] = [findMainPath()+'/data/']
     v26Paths['SHARED'] = ['/gluster/data/atlas/dbaron/v26/'] # added
-
+'''
+v26Paths['SHARED'] = ['/gluster/data/atlas/dbaron/v26/'] # added
 if __name__ == "__main__":
     print("This file is not meant to be executed --- it is a library of paths for the analysis datasets.")

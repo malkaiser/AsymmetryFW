@@ -1,4 +1,4 @@
-var="../OutputChargeProng/ZtautauSameSignNegativeLep/MuonChannel/OneProng"
+var="../HiggsM3Star"
 echo ""
 echo "Outputting to ${var}"
 
@@ -10,12 +10,13 @@ if [ -d $var ]; then
   echo -e "####################################################${NC}"
 fi
 
-echo ""
 echo "Are you absolutely sure you wish to proceed?"
 read varInput
 if [ $varInput == "yes" ]
 then
-    python3 RunAnalysis.py --samples All --outputDir $var --j 64 --verbosity INFO --treeName NOMINAL --jobType h
+    python3 RunAnalysis.py --sign oppSign --charge negative --isoRNN failedORLNT --prongness one --singleSample data_2015_0 --outputDir $var --j 64 --verbosity INFO --treeName NOMINAL --jobType h
+
 else
+    echo "Invalid input \"$varInput\"!"
     echo "exiting..."
 fi

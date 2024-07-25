@@ -12,20 +12,24 @@ float W_transverse_mass(TLorentzVector* met, TLorentzVector* lepton);
 float m3_star(TLorentzVector* met, TLorentzVector* negative_lepton, TLorentzVector* positive_lepton);
 float visible_mass(TLorentzVector* lepton, TLorentzVector* tau);
 
-void CLoop::Fill(double weight, int z_sample, const std::string& sampleName) {
+void CLoop::Fill(double weight, int z_sample, const std::string& sampleName, const std::string& usr_signCon, const std::string& usr_isoRNN, const std::string& usr_lepCharge, const std::string& usr_prongness) {
 
   double pi=TMath::Pi();
-  if (sampleName.substr(0,4)!="data"){
-    weight = weight*muon_0_NOMINAL_MuEffSF_HLT_mu26_ivarmedium_OR_HLT_mu50_QualMedium*muon_0_NOMINAL_MuEffSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50_QualMedium
-            *muon_0_NOMINAL_MuEffSF_IsoTightTrackOnly_FixedRad*muon_0_NOMINAL_MuEffSF_Reco_QualMedium*muon_0_NOMINAL_MuEffSF_TTVA;
-  }
   //Charges and lepton ID
   bool one_muon{n_electrons == 0 && n_muons == 1 && muon_0_q != 0 && tau_0_q != 0}; // only one muon and one tau
   bool one_electron{n_electrons == 1 && n_muons == 0 && elec_0_q != 0 && tau_0_q != 0}; // only one electron and one tau
-
   bool no_bjets{n_bjets_MV2c10_FixedCutBEff_85==0};
   bool tight_muon{muon_0_iso_TightTrackOnly_FixedRad == 1};
+  bool loose_but_not_tight{0};
+  if (tau_0_n_charged_tracks == 3 || tau_0_n_charged_tracks == 1 && tau_0_jet_rnn_score_trans >= 0.15 && tau_0_jet_rnn_score_trans <=0.40){
+    loose_but_not_tight = 1;
+  }
+  if (tau_0_n_charged_tracks == 1 || tau_0_n_charged_tracks == 3 && tau_0_jet_rnn_score_trans >= 0.25 && tau_0_jet_rnn_score_trans <= 0.50){
+    loose_but_not_tight = 1;
+  }
   bool tau_eta{(tau_0_p4->Eta() > 0.1) || (tau_0_p4->Eta() < -0.1) };
+
+  // Charge section
   float ql;
   float qtau;
   if (one_electron) { // assigns charges to electron and tau
@@ -38,8 +42,53 @@ void CLoop::Fill(double weight, int z_sample, const std::string& sampleName) {
   }
   bool electron_id=elec_0_id_medium;
   bool muon_id=muon_0_id_medium;
-  // Same sign passed iso muonminus 1 prong
-  if (ql==qtau && ql < 0 && tight_muon && muon_0_p4->Pt() > 27 && tau_0_n_charged_tracks == 1 && one_muon && n_taus==1 && muon_id && no_bjets && tau_eta){ // muon channel
+  bool signCondition;
+  if (usr_signCon =="oppSign")
+    signCondition = (ql != qtau);
+  if (usr_signCon =="sameSign")
+    signCondition = (ql == qtau);
+
+  bool lepCharge;
+  if (usr_lepCharge =="positive")
+    lepCharge = (ql > 0);
+  if (usr_lepCharge =="negative")
+    lepCharge = (ql < 0);
+  
+  bool isoRNN;
+  if (usr_isoRNN == "passed")
+    isoRNN = (tight_muon);
+  if (usr_isoRNN == "failedORLNT")
+    isoRNN = (!tight_muon || loose_but_not_tight);
+
+  bool prongness;
+  if (usr_prongness == "three")
+    prongness = (tau_0_n_charged_tracks == 3);
+  if (usr_prongness == "one")
+    prongness = (tau_0_n_charged_tracks == 1);
+
+  // Weights section
+  if (sampleName.substr(0,4)!="data"){
+    weight = weight*muon_0_NOMINAL_MuEffSF_HLT_mu26_ivarmedium_OR_HLT_mu50_QualMedium*muon_0_NOMINAL_MuEffSF_HLT_mu20_iloose_L1MU15_OR_HLT_mu50_QualMedium
+            *muon_0_NOMINAL_MuEffSF_Reco_QualMedium*muon_0_NOMINAL_MuEffSF_TTVA*jet_NOMINAL_central_jets_global_effSF_JVT*jet_NOMINAL_central_jets_global_ineffSF_JVT
+             *jet_NOMINAL_forward_jets_global_effSF_JVT*jet_NOMINAL_forward_jets_global_ineffSF_JVT
+             *jet_NOMINAL_global_effSF_MV2c10_FixedCutBEff_85*jet_NOMINAL_global_ineffSF_MV2c10_FixedCutBEff_85;
+    if (tight_muon) {
+      weight=weight*muon_0_NOMINAL_MuEffSF_IsoTightTrackOnly_FixedRad;
+    }
+    else {
+      weight = weight*muon_0_NOMINAL_MuEffSF_IsoLoose_FixedRad;
+    }
+    // tight reweighting
+    if ((tau_0_n_charged_tracks == 1 && tau_0_jet_rnn_score_trans >= 0.40) || tau_0_n_charged_tracks == 3 && tau_0_jet_rnn_score_trans >= 0.55) {
+      weight = weight*tau_0_NOMINAL_TauEffSF_JetRNNtight;
+    }
+    else {
+      weight=weight*tau_0_NOMINAL_TauEffSF_JetRNNloose;
+    }
+  }
+//  Opp sign passed iso muonplus 3 prong
+//  if (ql==qtau && (!tight_muon || loose_but_not_tight)  && ql < 0 && tau_0_n_charged_tracks == 1 && muon_0_p4->Pt() > 27 && one_muon && n_taus==1 && muon_id && no_bjets && tau_eta){ // muon channel
+  if (signCondition && isoRNN && lepCharge && prongness && muon_0_p4->Pt() > 27 && one_muon && n_taus==1 && muon_id && no_bjets && tau_eta){ // muon channel
 
     // defining selection variables
     double m_vis;
@@ -55,11 +104,22 @@ void CLoop::Fill(double weight, int z_sample, const std::string& sampleName) {
     // Cuts vector
     std::vector<int> cuts={0,0,0,0,0};
     // CUTS
-    if (tau_0_n_charged_tracks == 3 || tau_0_n_charged_tracks == 1 && tau_0_jet_rnn_score_trans >= 0.40) {cuts[0] = 1;} // 1-pronged tau RNN
-    if (tau_0_n_charged_tracks == 1 || (tau_0_n_charged_tracks == 3 && tau_0_jet_rnn_score_trans >= 0.50)) {cuts[1] = 1;} // 3-pronged tau RNN
+    // LOOSE BUT NOT TIGHT TAU
+    
+    if (usr_isoRNN == "failedORLNT") {
+      cuts[0] = 1;
+      cuts[1] = 1;
+    }
+    else {
+      if (tau_0_n_charged_tracks == 3 || tau_0_n_charged_tracks == 1 && tau_0_jet_rnn_score_trans >= 0.40) {cuts[0] = 1;} // 1-pronged tau RNN
+      if (tau_0_n_charged_tracks == 1 || (tau_0_n_charged_tracks == 3 && tau_0_jet_rnn_score_trans >= 0.50)) {cuts[1] = 1;} // 3-pronged tau RNN
+    }
     if (sigmaCosDelPhi > -0.1) {cuts[2] = 1;} // Orthogonality condition!
+    //if (m_vis < 85) {cuts[3] = 1;}
+    //if ((m3 > 60) && (m3 < 110)) {cuts[4] = 1;}
+
     if (m_vis < 85) {cuts[3] = 1;}
-    if ((m3 > 60) && (m3 < 110)) {cuts[4] = 1;}
+    if ((m3 > 110) && (m3 < 160)) {cuts[4] = 1;}
 
 
     // SUM OF THE VECTOR STORING IF CUTS PASS OR NOT

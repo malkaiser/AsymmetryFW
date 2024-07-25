@@ -99,11 +99,17 @@ float visible_mass(TLorentzVector* lepton, TLorentzVector* tau){
   return add;
 }
 
+float myTransverseMass2(TLorentzVector* vector1, TLorentzVector* vector2){
+  float delta_phi = del_phi(vector1->Phi(),vector2->Phi());
+  float transverse_mass = 2*(vector1->Pt())*(vector2->Pt())*(1-cos(delta_phi));
+  return transverse_mass;
+}
+
 float m3_star(TLorentzVector* met, TLorentzVector* negative_lepton, TLorentzVector* positive_lepton) {
-  TLorentzVector met_negative_lepton = met->operator+(*negative_lepton);
-  TLorentzVector met_positive_lepton = met->operator+(*positive_lepton);
-  TLorentzVector negative_positive_lepton = negative_lepton->operator+(*positive_lepton);
-  float mT_combined = sqrt(met_negative_lepton.Mt2() + met_positive_lepton.Mt2() + negative_positive_lepton.Mt2());
+  float met_negative_lepton = myTransverseMass2(met,negative_lepton);
+  float met_positive_lepton = myTransverseMass2(met,positive_lepton);
+  float negative_positive_lepton = myTransverseMass2(negative_lepton,positive_lepton);
+  float mT_combined = sqrt(met_negative_lepton + met_positive_lepton + negative_positive_lepton);
   float cosThetaEtaStar = tanh((negative_lepton->Eta()-positive_lepton->Eta())/2);
   float sinThetaEtaStar = sqrt(1-cosThetaEtaStar*cosThetaEtaStar);
   float m3_star = mT_combined/sinThetaEtaStar;

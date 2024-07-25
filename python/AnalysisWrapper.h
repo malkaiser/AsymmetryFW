@@ -17,8 +17,8 @@ class CLoopWrapper {
 
     ~CLoopWrapper() = default;
     
-    void Loop(float lumFactor, int z_sample, std::string key, CLoopConfig config){
-        m_cloop->Loop(lumFactor, z_sample, key, config);
+    void Loop(float lumFactor, int z_sample, std::string key, CLoopConfig config, std::string usr_signCon, std::string usr_isoRNN, std::string usr_lepCharge, std::string usr_prongness){
+        m_cloop->Loop(lumFactor, z_sample, key, config, usr_signCon, usr_isoRNN, usr_lepCharge, usr_prongness);
     }
     private:
     std::shared_ptr<CLoop> m_cloop;

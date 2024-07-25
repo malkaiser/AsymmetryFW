@@ -9,29 +9,11 @@ mv singletop.root ../Analysis/
 hadd ttbar.root ttbar*.root
 mv ttbar.root ../Analysis/
 
-#hadd VBF_Zee.root VBF_Zee_201*.root
-#mv VBF_Zee.root ../Analysis/
-
-#hadd VBF_Zmumu.root VBF_Zmumu_201*.root
-#mv VBF_Zmumu.root ../Analysis/
-
-#hadd VBF_Ztautau.root VBF_Ztautau_201*.root
-#mv VBF_Ztautau.root ../Analysis/
-
-#hadd VBF_Higgs.root VBFH*.root
-#mv VBF_Higgs.root ../Analysis/
-
 hadd VBF_PoPy.root VBF_Zee_201*.root VBF_Zmumu_201*.root VBF_Ztautau_201*.root VBFH*.root
 mv VBF_PoPy.root ../Analysis/
 
-hadd VBF_Zee_sherpa.root VBF_Zee_sherpa*.root
-mv VBF_Zee_sherpa.root ../Analysis/
-
-hadd VBF_Zmumu_sherpa.root VBF_Zmumu_sherpa*.root
-mv VBF_Zmumu_sherpa.root ../Analysis/
-
-hadd VBF_Ztautau_sherpa.root VBF_Ztautau_sherpa*.root
-mv VBF_Ztautau_sherpa.root ../Analysis/
+hadd VBF_sherpa.root VBF_Zee_sherpa*.root VBF_Zmumu_sherpa*.root VBF_Ztautau_sherpa*.root
+mv VBF_sherpa.root ../Analysis/
 
 hadd VV_EWK_SemiLep.root VV_EWK_SemiLep*.root
 mv VV_EWK_SemiLep.root ../Analysis/

@@ -152,6 +152,10 @@ def createArgumentParser():
     executionMode.add_argument("--samples", help="Group of samples to run over.",type=str,choices=["MC","Data","All"],default="All")
     executionMode.add_argument("--singleSample", help="Run over a single sample.",type=str,default="")
     executionMode.add_argument("--inputFile", help="Input txt file with a list of samples to run over.",type=str,default="")
+    parser.add_argument("--sign", help="Sign of lepton/tau charge (opposite/same).",type=str,choices=["oppSign","sameSign"],default="oppSign")
+    parser.add_argument("--isoRNN", help="Isolation and RNN requirements.",type=str,choices=["passed","failedORLNT"],default="passed")
+    parser.add_argument("--charge", help="Muon charge.",type=str,choices=["positive","negative"],default="positive")
+    parser.add_argument("--prongness", help="Tau prongness.",type=str,choices=["three","one"],default="three")
     parser.add_argument("--verbosity", help="Verbosity level.",type=str,default="INFO",choices=["INFO","DEBUG"])
     parser.add_argument("--treeName", help="Name of the tree to run over.",type=str,default="NOMINAL")
     parser.add_argument("--jobType", help="Type of job to run.",type=str,default="h",choices=["h","n","hn","hr","hnr"])
@@ -159,10 +163,10 @@ def createArgumentParser():
     parser.add_argument("--j", help="Number of cores to use.",type=int,default=1)
     return parser
 
-def getArgumentTupleForSampleGroup(treeName,sampleGroup,verbosity,outputPath,analysisConfig):
-    return product([treeName],sampleGroup,[verbosity],[outputPath],[analysisConfig])
+def getArgumentTupleForSampleGroup(treeName,sampleGroup,verbosity,outputPath,analysisConfig,usr_signCon,usr_isoRNN,usr_lepCharge,usr_prongness):
+    return product([treeName],sampleGroup,[verbosity],[outputPath],[analysisConfig],[usr_signCon],[usr_isoRNN],[usr_lepCharge],[usr_prongness])
 
-def runAnalysis(treeName,sampleName,verbosity,outputPath,analysisConfig):
+def runAnalysis(treeName,sampleName,verbosity,outputPath,analysisConfig,usr_signCon,usr_isoRNN,usr_lepCharge,usr_prongness):
     # Get the absolute path of the file
     filePath = getAbsoluteFilePath(sampleName)
     if verbosity=="DEBUG":
@@ -188,7 +192,7 @@ def runAnalysis(treeName,sampleName,verbosity,outputPath,analysisConfig):
         print(DEBUG("Normalisation weight: "), weight)
 
     analysis = CLoop(r.addressof(tree), sampleName)
-    analysis.Loop(weight, sampleID, sampleName,analysisConfig)
+    analysis.Loop(weight, sampleID, sampleName,analysisConfig, usr_signCon,usr_isoRNN,usr_lepCharge,usr_prongness)
     del analysis
     file.Close()
     success = os.system("mv "+sampleName+".root "+outputPath+"/"+treeName+"/"+sampleName+treeName+".root")
@@ -223,7 +227,7 @@ if __name__ == "__main__":
 
     # If a single sample is chosen, run just over that
     if args.singleSample != "":
-        runAnalysis(args.treeName,args.singleSample,verbosity,args.outputDir,config)
+        runAnalysis(args.treeName,args.singleSample,verbosity,args.outputDir,config, args.sign, args.isoRNN, args.charge, args.prongness)
     
     # If an input file is given, run over the samples in the file
     elif args.inputFile != "":
@@ -232,7 +236,7 @@ if __name__ == "__main__":
         with open(args.inputFile) as f:
             for line in f:
                 listOfSamples.append(line.strip())
-        samplesTuple = getArgumentTupleForSampleGroup(args.treeName,listOfSamples,verbosity,args.outputDir, config)
+        samplesTuple = getArgumentTupleForSampleGroup(args.treeName,listOfSamples,verbosity,args.outputDir, config, args.sign,args.isoRNN,args.charge,args.prongness)
         print(TITLE("Running over "+str(len(listOfSamples))+" samples\n"))
         with multiprocessing.Pool(processes=nCPU) as pool:
             pool.starmap(runAnalysis, samplesTuple)
@@ -242,8 +246,8 @@ if __name__ == "__main__":
         allData = []
         allMC = []
         getSamplesToRun(args.samples,allData,allMC)
-        dataTuple = getArgumentTupleForSampleGroup(args.treeName,allData,verbosity,args.outputDir, config)
-        mcTuple = getArgumentTupleForSampleGroup(args.treeName,allMC,verbosity,args.outputDir, config)
+        dataTuple = getArgumentTupleForSampleGroup(args.treeName,allData,verbosity,args.outputDir, config, args.sign,args.isoRNN,args.charge,args.prongness)
+        mcTuple = getArgumentTupleForSampleGroup(args.treeName,allMC,verbosity,args.outputDir, config, args.sign,args.isoRNN,args.charge,args.prongness)
 
         print(TITLE("Running over "+str(len(allData))+" DATA samples\n"))
         with multiprocessing.Pool(processes=nCPU) as pool:
