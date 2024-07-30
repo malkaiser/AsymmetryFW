@@ -26,6 +26,6 @@ else
   python3 RunAnalysis.py --sign $1 --isoRNN $2 --charge $3 --prongness $4 --samples All --outputDir $var --j 64 --verbosity INFO --treeName NOMINAL --jobType h
 fi
 
-cp ../Analysis/Tools/concatenate.sh $var/NOMINAL/
+cp ../Automatic/concatenate.sh $var/NOMINAL/
 cd $var/NOMINAL/
 bash concatenate.sh

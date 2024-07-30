@@ -368,6 +368,23 @@ def Integral(filename):
     file.Close()
 
     return hist.Integral(0,hist.GetNbinsX()-1)
+
+############################################################################################################
+def rounder(number):
+    scale = np.log10(number)
+    if np.isinf(scale):
+        return str(0)
+    if scale >= 1:
+        print(str(round(number)))
+        return str(round(number))
+    if scale < 1:
+        print(number)
+        leading = number*(10**np.ceil(np.abs(scale)))
+        rounded = round(leading)
+        divided = rounded/(10**np.ceil(np.abs(scale)))
+        print(divided)
+        print(str(divided))
+        return str(divided)
 ############################################################################################################
 # Function to plot a histogram stack of MC with data
 def stackPlot(data,signal,background,histograms,watermark,function,additionalSignal=[],signalMu = 1.0, backgroundMu = 1.0,average=False,after_fit=False,final_state="Z#rightarrow #mu#mu",regionLabel="",blind=True,blindMass=True,unblindPurityLimit=0.0,printVersion=False,printOverflows=False, purityMultiplier=1.0, rQCD = 1.0, errQCD=0, export=False, calculateDifference=False):
@@ -451,12 +468,12 @@ def stackPlot(data,signal,background,histograms,watermark,function,additionalSig
                 save_file.WriteObject(export_hist,i.m_name)
         if "_pt_basic_all" in i.m_name:
             array = np.empty((0,3))
-            array2 = np.zeros(20)
+            array2 = np.empty(20,dtype="object")
+            header = np.array(["Data", "Data Error", "W+Jets", "W+Jets Error", "Ztautau", "Ztautau Error", "Zmumu", "Zmumu Error"])
+            header = np.append(header, ["ttbar", "ttbar Error", "Singletop", "Singletop Error", "VV", "VV Error", "VBF", "VBF Error", "Higgs", "Higgs", "Delta", "Delta Error"])
             for s in samples:
-                integral = round(samples[s][2].Integral(0,samples[s][2].GetNbinsX(),"width"))
-                err = round(np.sqrt((samples[s][2].GetSumw2()).GetSum()))
-                if err < 1:
-                    err = 1
+                integral = rounder(samples[s][2].Integral(0,samples[s][2].GetNbinsX(),"width"))
+                err = rounder(np.sqrt((samples[s][2].GetSumw2()).GetSum()))
                 if s=="Data":
                     array2[0] = integral
                     array2[1] = err
@@ -489,10 +506,14 @@ def stackPlot(data,signal,background,histograms,watermark,function,additionalSig
                     array2[19] = err
                 print(s+": "+str(samples[s][2].Integral(0,samples[s][2].GetNbinsX(),"width")), "Error: "+str(np.sqrt((samples[s][2].GetSumw2()).GetSum())))
                 array = np.vstack((array,np.array([s,samples[s][2].Integral(0,samples[s][2].GetNbinsX(),"width"),np.sqrt((samples[s][2].GetSumw2()).GetSum())])))
+            array2 = np.vstack((header,array2))
             txtname = i.m_name+'.txt'
             txtname2 = i.m_name+'_latex'+'.txt'
             np.savetxt(txtname,array,fmt = '%s')
-            np.savetxt(txtname2,array2,fmt = '%.0f', newline = ' & ')
+            np.savetxt(txtname2,array2,fmt='%s', delimiter = ' & ', newline = '\n')
+            os.system('mkdir -p ./numbers/')
+            os.system('mv '+txtname+' ./numbers/')
+            os.system('mv '+txtname2+' ./numbers/')
             ###### SETTING THE COLOURS ######
         for s in samples:
             if s=="Data":

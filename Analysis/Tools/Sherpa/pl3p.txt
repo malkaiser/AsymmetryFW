@@ -1,2 +1,0 @@
-Data & Data Error & W+Jets & W+Jets Error & Ztautau & Ztautau Error & Zmumu & Zmumu Error & ttbar & ttbar Error & Singletop & Singletop Error & VV & VV Error & VBF & VBF Error & Higgs & Higgs & Delta & Delta Error
-39759 & 199 & 1393 & 121 & 36968 & 648 & 132 & 5.9 & 167 & 4.9 & 36 & 2.1 & 172 & 3.5 & 27 & 0.8 & 128 & 1.2 & 736 & 689

@@ -8,7 +8,7 @@ r.TH1.AddDirectory(False)
 ############################################################################################################
 # Storage class for histogram information
 class HistogramInfo:
-    def __init__(self, name, binEdges=[], binSteps=[], binNorm=1.0, xTitle="", leftCut=0, rightCut=0, units="",logScale=False,xRange=[0.0,0.0],isIntegerPlot=False, saveName = "none"):
+    def __init__(self, name, binEdges=[], binSteps=[], binNorm=1.0, xTitle="", leftCut=0, rightCut=0, units="",logScale=False,xRange=[0.0,0.0],isIntegerPlot=False, saveName = "none", export = False):
         self.m_name = name
         self.m_binEdges = binEdges
         self.m_binSteps = binSteps
@@ -21,6 +21,7 @@ class HistogramInfo:
         self.m_xRange = xRange
         self.m_isIntegerPlot = isIntegerPlot
         self.m_saveName = saveName
+        self.m_export = export
 
     def __str__(self):
         return f"Name: {self.m_name}, Bin Edges: {self.m_binEdges}, Bin Steps: {self.m_binSteps}, Bin Norm: {self.m_binNorm}, xTitle: {self.m_xTitle}, Left Cut: {self.m_leftCut}, Right Cut: {self.m_rightCut}, Units: {self.m_units}"
@@ -350,7 +351,7 @@ def setupShadeHistogram(baseHistogram,highYRange,lowXRange,highXRange,purityHist
     
 ############################################################################################################
 # Function to get the integral of a plotted histogram
-def Integral(data,signal,background,histogram):
+def Integral(filename):
 
     ###### INTERNAL DICTIONARY STORING THE QCD and EW SAMPLE NAMES ######
     ###### ALSO A FUNCTION TO GET THE CORRECT NAME ######
@@ -358,46 +359,33 @@ def Integral(data,signal,background,histogram):
     qcdLabels = {"MG":"MadGraphLO","MGNLO":"MadGraphNLO","Sherpa":"Sherpa2.2.1","SherpaNLO":"Sherpa2.2.11","PoPy":"PowHeg+Pythia8"}
     vbfLabels = {"Sherpa":"Sherpa2.2.11","PoPy":"PowHeg+Pythia"}
     '''
-    
-    sampleNames = {"signal_process_name" : signal["Signal"][0]}
-    for key in background:
-        sampleNames[key] = background[key][0] # adds every background process to 
-    
-    for sample in sampleNames:
-        sampleType = sampleNames[sample]
-        sampleType = sampleType.replace(".root","") # Remove the .root extension
-        sampleType = sampleType.replace("sherpa","") # Remove the sherpa filename
-        # Asign the processed name to the dictionary
-        sampleNames[sample] = sampleType
+    file = r.TFile.Open(filename,"READ")
+    hist = file.Get("lep_pt_basic_all")
+    if hist == None:
+        print("Histogram not found in file: ",filename)
+        return 0
+    hist.SetDirectory(0)
+    file.Close()
 
+    return hist.Integral(0,hist.GetNbinsX()-1)
 
-    samples = data.copy()
-    samples.update(background)
-    samples.update(signal)
-
-    print("HISTOGRAM = ",histogram.m_name)
-    for s in samples:
-        file = r.TFile.Open(samples[s][0],"READ")
-        hist = file.Get(histogram.m_name)
-        if hist == None:
-            print("Histogram not found in file: ",samples[s][0])
-            continue
-        hist.SetDirectory(0)
-        samples[s].append
-        samples[s][2]=hist # makes samples[s][2] a TH1F object (reason for trailing 0 in dict)
-        file.Close()
-
-    ###### REBIN AND NORMALISE ######
-    if histogram.needsRebin():
-        rebining=biner(histogram.m_binEdges,histogram.m_binSteps,samples["Data"][2])
-        nb=len(rebining)-1
-        for s in samples:
-            samples[s][2]=samples[s][2].Rebin(nb,s,rebining)
-            print(s+" integral = "+ str(samples[s][2].Integral(0,nb)))
-                    
+############################################################################################################
+def rounder(number):
+    scale = np.log10(np.abs(number))
+    if np.isinf(scale):
+        return str(0)
+    if scale >= 1:
+        return str(round(number))
+    if scale < 1:
+        leading = number*(10**np.ceil(np.abs(scale)))
+        rounded = round(leading)
+        divided = rounded/(10**np.ceil(np.abs(scale)))
+        if number < 0:
+            return str(-divided)
+        return str(divided)
 ############################################################################################################
 # Function to plot a histogram stack of MC with data
-def stackPlot(data,signal,background,histograms,watermark,function,additionalSignal=[],signalMu = 1.0, backgroundMu = 1.0,average=False,after_fit=False,final_state="Z#rightarrow #mu#mu",regionLabel="",blind=True,blindMass=True,unblindPurityLimit=0.0,printVersion=False,printOverflows=False, purityMultiplier=1.0):
+def stackPlot(data,signal,background,histograms,watermark,function,additionalSignal=[],signalMu = 1.0, backgroundMu = 1.0,average=False,after_fit=False,final_state="Z#rightarrow #mu#mu",regionLabel="",blind=True,blindMass=True,unblindPurityLimit=0.0,printVersion=False,printOverflows=False, purityMultiplier=1.0, rQCD = 1.0, errQCD=0, export=False, calculateDifference=False,exportName=""):
 
     ###### INTERNAL DICTIONARY STORING THE QCD and EW SAMPLE NAMES ######
     ###### ALSO A FUNCTION TO GET THE CORRECT NAME ######
@@ -417,10 +405,12 @@ def stackPlot(data,signal,background,histograms,watermark,function,additionalSig
         # Asign the processed name to the dictionary
         sampleNames[sample] = sampleType
 
-
+    r.gROOT.SetBatch(1)
     samples = data.copy()
     samples.update(background)
     samples.update(signal)
+    if export:
+        save_file = r.TFile.Open(exportName,"RECREATE")
 
     for i in histograms:
         print("HISTOGRAM = ",i.m_name)
@@ -431,6 +421,7 @@ def stackPlot(data,signal,background,histograms,watermark,function,additionalSig
                 print("Histogram not found in file: ",samples[s][0])
                 continue
             hist.SetDirectory(0)
+            hist.Sumw2()
             samples[s].append
             samples[s][2]=hist # makes samples[s][2] a TH1F object (reason for trailing 0 in dict)
             file.Close()
@@ -455,8 +446,72 @@ def stackPlot(data,signal,background,histograms,watermark,function,additionalSig
             hist_list=[samples[s][2] for s in samples if 'Average' not in samples[s][0]]
             normalization(hist_list,i.m_binNorm)
 
-        ###### SETTING THE COLOURS ######
-
+        ###### Printing Integral and Error #######
+        ###### SUBTRACTING DATA AND MC #######
+        if calculateDifference:
+            difference = samples["Data"][2].Clone()
+            for s in samples:
+                if s!="Data":
+                    difference.Add(samples[s][2],-1)
+            samples["difference"]=["",r.kPink,difference]
+            if export:
+                export_hist=difference.Clone()
+                for j in range(0,difference.GetNbinsX()):
+                    try:
+                        error = difference.GetBinContent(j)*rQCD*np.sqrt((difference.GetBinError(j)/difference.GetBinContent(j))**2+(errQCD/rQCD)**2)
+                    except ZeroDivisionError:
+                        error = difference.GetBinContent(j)
+                    export_hist.SetBinContent(j,difference.GetBinContent(j)*rQCD)
+                    export_hist.SetBinError(j,error)
+                save_file.WriteObject(export_hist,i.m_name)
+        if "_pt_basic_all" in i.m_name:
+            array = np.empty((0,3))
+            array2 = np.empty(20,dtype="object")
+            header = np.array(["Data", "Data Error", "W+Jets", "W+Jets Error", "Ztautau", "Ztautau Error", "Zmumu", "Zmumu Error"])
+            header = np.append(header, ["ttbar", "ttbar Error", "Singletop", "Singletop Error", "VV", "VV Error", "VBF", "VBF Error", "Higgs", "Higgs", "Delta", "Delta Error"])
+            for s in samples:
+                integral = rounder(samples[s][2].Integral(0,samples[s][2].GetNbinsX(),"width"))
+                err = rounder(np.sqrt((samples[s][2].GetSumw2()).GetSum()))
+                if s=="Data":
+                    array2[0] = integral
+                    array2[1] = err
+                if s=="W+jets":
+                    array2[2] = integral
+                    array2[3] = err
+                if s=="Signal":
+                    array2[4] = integral
+                    array2[5] = err
+                if s=="Zmumu":
+                    array2[6] = integral
+                    array2[7] = err
+                if s=="ttbar":
+                    array2[8] = integral
+                    array2[9] = err
+                if s=="singletop":
+                    array2[10] = integral
+                    array2[11] = err
+                if s=="VV":
+                    array2[12] = integral
+                    array2[13] = err
+                if s=="VBF":
+                    array2[14] = integral
+                    array2[15] = err
+                if s=="Higgs":
+                    array2[16] = integral
+                    array2[17] = err
+                if s=="difference":
+                    array2[18] = integral
+                    array2[19] = err
+                array = np.vstack((array,np.array([s,samples[s][2].Integral(0,samples[s][2].GetNbinsX(),"width"),np.sqrt((samples[s][2].GetSumw2()).GetSum())])))
+            array2 = np.vstack((header,array2))
+            txtname = i.m_name+'.txt'
+            txtname2 = i.m_name+'_latex'+'.txt'
+            np.savetxt(txtname,array,fmt = '%s')
+            np.savetxt(txtname2,array2,fmt='%s', delimiter = ' & ', newline = '\n')
+            os.system('mkdir -p ./numbers/')
+            os.system('mv '+txtname+' ./numbers/')
+            os.system('mv '+txtname2+' ./numbers/')
+            ###### SETTING THE COLOURS ######
         for s in samples:
             if s=="Data":
                 samples[s][2].SetMarkerStyle(20)
@@ -575,7 +630,7 @@ def stackPlot(data,signal,background,histograms,watermark,function,additionalSig
         samples["Data"][2].GetYaxis().SetLabelSize(0.06)
         samples["Data"][2].GetYaxis().SetTitleSize(0.08)
         samples["Data"][2].GetYaxis().SetTitleOffset(0.48)
-        samples["Data"][2].GetYaxis().SetTitle("Events")
+        samples["Data"][2].GetYaxis().SetTitle("Events/"+str(i.m_binNorm)+" "+str(i.m_units))
         samples["Data"][2].GetYaxis().ChangeLabel(1,-1,0.)
 
         ###### SETTING MAX NUMBER OF DIGITS IN Y/X AXIS ######
@@ -666,7 +721,9 @@ def stackPlot(data,signal,background,histograms,watermark,function,additionalSig
         regionText.SetTextAlign(22)
         regionText.SetTextFont(43)
         regionText.SetTextSize(17)
-        regionText.Draw("same")    
+        l.SetTextAlign(21)
+        l.DrawLatex(0.5,0.95,regionLabel)
+        #regionText.Draw("same")    
         '''
         vbfNormText.SetNDC ()
         vbfNormText.SetTextAlign(22)
@@ -865,13 +922,57 @@ def stackPlot(data,signal,background,histograms,watermark,function,additionalSig
         line12.Draw (" same ")
         line13.Draw (" same ")
         line14.Draw (" same ")
-        file_name = i.m_name+"_"+watermark+".pdf"
-        if i.m_saveName!="None":
+        if i.m_saveName!="none":
             file_name = i.m_saveName+"_"+watermark+".pdf"
+        else:
+            file_name = i.m_name+"_"+watermark+".pdf"
         os.system('mkdir -p ./plots/')
         canvas.Update()
         canvas.Print(file_name)    
         canvas.Destructor()
         os.system('mv '+file_name+' ./plots/')
-
+        try:
+            del samples["difference"]
+        except KeyError:
+            print("Difference not defined!")
+    if export:
+        save_file.Close()
 ############################################################################################################
+def getArrayRatio(filename1,filename2,histogram):
+    file1=r.TFile.Open(filename1,"READ")
+    hist1 = file1.Get(histogram)
+    if hist1 == None:
+        print("Histogram not found in file: ",filename1)
+        return [-1,0,0]
+    hist1.SetDirectory(0)
+    file2=r.TFile.Open(filename2,"READ")
+    hist2 = file2.Get(histogram)
+    if hist2 == None:
+        print("Histogram not found in file: ",filename1)
+        return [0,-1,0]
+    hist1.SetDirectory(0)
+    file1.Close()
+    file2.Close()
+    print("Calculating ratio of "+filename1+" to "+filename2)
+    centres=np.array([])
+    ratios=np.array([])
+    errors=np.array([])
+    for i in range(0,hist1.GetNbinsX()):
+        centre = hist1.GetBinCenter(i)
+        try:
+            ratio = hist1.GetBinContent(i)/hist2.GetBinContent(i)
+            if (ratio<0):
+                ratio=0
+        except ZeroDivisionError:
+            print("Setting ratio of bin "+str(i)+" as zero")
+            ratio = 0
+        try:
+            error = ratio*np.sqrt((hist1.GetBinError(i)/hist1.GetBinContent(i))**2+(hist2.GetBinError(i)/hist2.GetBinContent(i))**2)
+        except ZeroDivisionError:
+            print("Setting error of bin "+str(i)+" as zero")
+            error = 0
+        centres=np.append(centres,centre)
+        ratios=np.append(ratios,ratio)
+        errors=np.append(errors,error)
+    return centres, ratios, errors
+
