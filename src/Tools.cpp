@@ -121,3 +121,52 @@ float W_transverse_mass(TLorentzVector* met, TLorentzVector* lepton){
   float transverse_mass = sqrt(2*(lepton->Pt())*(met->Et())*(1-cos(delta_phi)));
   return transverse_mass;
 }
+
+float mLjetTau(TLorentzVector* ljet, TLorentzVector* tau){
+  Double_t add_square = ((ljet->E()+tau->E())*(ljet->E()+tau->E()));
+  TVector3 vector = ljet->Vect() + tau->Vect();
+  Double_t add = sqrt(add_square-vector.Mag2());
+  return add;
+}
+
+float pTAsymm(TLorentzVector* lepton, TLorentzVector* tau){
+  float pTtau = tau->Pt();
+  float pTlepton = lepton->Pt();
+  float pTAsymm = (pTtau - pTlepton)/(pTtau+pTlepton);
+  return pTAsymm;
+}
+
+float deltaR(TLorentzVector* vector1, TLorentzVector* vector2){
+  float deltaEta = vector1->Eta() - vector2->Eta();
+  float deltaPhi = del_phi(vector1->Phi(), vector2->Phi());
+  float deltaR = sqrt(deltaEta*deltaEta + deltaPhi*deltaPhi);
+  return deltaR;
+}
+
+float DZeta(TLorentzVector* tau, TLorentzVector* muon, TLorentzVector* met){
+  double pi=TMath::Pi();
+  TVector3 zeta_hat(1,0,0);
+  zeta_hat.SetPtEtaPhi(1,0,(tau->Phi()+muon->Phi())/2);
+  TVector3 pT_met = met->Vect();
+  pT_met.SetTheta(pi/2);
+  TVector3 pT_tau = tau->Vect();
+  pT_tau.SetTheta(pi/2);
+  TVector3 pT_muon = muon->Vect();
+  pT_muon.SetTheta(pi/2);
+  double p_zeta_miss = zeta_hat.Dot(pT_met);
+  double p_zeta_vis = zeta_hat.Dot(pT_met+pT_tau);
+  double d_zeta = p_zeta_miss - 0.85*p_zeta_vis;
+  return d_zeta;
+}
+
+TVector3 VectorialSum(TLorentzVector* tau, TLorentzVector* muon){
+  TVector3 pT_tau = tau->Vect();
+  TVector3 pT_muon = muon->Vect();
+  TVector3 pT_sum = pT_tau + pT_muon;
+  return pT_sum;  
+}
+
+float EtaSeparation(TLorentzVector* tau, TLorentzVector* muon){
+  float eta_separation = tau->Eta()-muon->Eta();
+  return eta_separation;
+}

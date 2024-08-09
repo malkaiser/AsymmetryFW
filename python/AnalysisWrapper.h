@@ -8,7 +8,6 @@
 #include <string>
 #include "CLoop.h"
 #include "CLoopConfig.h"
-#include "Adder.h"
 
 class CLoopWrapper {
     public:
@@ -22,20 +21,5 @@ class CLoopWrapper {
     }
     private:
     std::shared_ptr<CLoop> m_cloop;
-
-};
-
-class RootAdderWrapper{
-    public:
-    explicit RootAdderWrapper(std::string file1, std::string file2) :
-        root_adder(std::make_shared<Adder>(file1, file2)) {};
-
-    ~RootAdderWrapper() = default;
-    
-    void AddTrees(const std::string& treeName){
-        root_adder->AddTrees(treeName);
-    }
-    private:
-    std::shared_ptr<Adder> root_adder;
 
 };

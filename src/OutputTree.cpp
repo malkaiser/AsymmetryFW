@@ -5,27 +5,25 @@ OutputTree::OutputTree(const char* treeName, const char* treeDescription){
     m_Tree = std::make_unique<TTree>(treeName, treeDescription);
 
     // Setting tree branches
-    m_Tree->Branch("mcWeight", &m_mcWeight);
-    m_Tree->Branch("mjj", &m_mjj);
-    m_Tree->Branch("deltaPhiLT",&m_deltaPhiLT);
-    m_Tree->Branch("jetRNNScore",&m_jetRNNScore);
-    m_Tree->Branch("transverseMassLep",&m_transverseMassLep);
-    m_Tree->Branch("massTauLep",&m_massTauLep);
-    m_Tree->Branch("tau_p4", &m_tau_pT);
-    m_Tree->Branch("lep_p4", &m_lep_pT);
-    m_Tree->Branch("jet0_p4", &m_jet0_pT);
-    m_Tree->Branch("jet1_p4", &m_jet1_pT);
-    m_Tree->Branch("met_p4", &m_met_pT);
-    m_Tree->Branch("eventNumber", &m_event_number);
-    
-    m_Tree->Branch("mWT", &m_mWT); // m_mET
-    m_Tree->Branch("mET", &m_mET); // m_mWT
-    m_Tree->Branch("m3_star", &m_m3_star); // m3_star
-    m_Tree->Branch("sigmaCosDelPhi", &m_sigmaCosDelPhi); // novel selection
-    m_Tree->Branch("n_bjets", &m_n_bjets); // n_bjets
-    m_Tree->Branch("tauProngs",&m_tauProngs);
-    m_Tree->Branch("tau1ProngScore",&m_tau1ProngScore);
-    m_Tree->Branch("tau3ProngScore",&m_tau3ProngScore);
-    m_Tree->Branch("mVis",&m_mVis);
-    m_Tree->Branch("m3star",&m_m3star);
+
+    m_Tree->Branch("m_mcWeight",&m_mcWeight);
+    m_Tree->Branch("m_tau_pT", &m_tau_pT);
+    m_Tree->Branch("m_lep_pT",&m_lep_pT);
+    m_Tree->Branch("m_met_pT",&m_met_pT);
+    m_Tree->Branch("m_event_number",&m_event_number);
+    m_Tree->Branch("m_m_vis",&m_m_vis);
+    m_Tree->Branch("m_sigmaCosDelPhi",&m_sigmaCosDelPhi);
+    m_Tree->Branch("m_m3",&m_m3);
+    m_Tree->Branch("m_mWT",&m_mWT);
+    m_Tree->Branch("m_m_jtau",&m_m_jtau);
+    m_Tree->Branch("m_pT_asymm",&m_pT_asymm);
+    m_Tree->Branch("m_d_zeta",&m_d_zeta);
+    m_Tree->Branch("m_delta_phiTauLep",&m_delta_phiTauLep);
+    m_Tree->Branch("m_delta_phiTauMet",&m_delta_phiTauMet);
+    m_Tree->Branch("m_ratioMetTauPT",&m_ratioMetTauPT);
+
+    m_Tree->Branch("m_etaSeparation",&m_etaSeparation);
+    m_Tree->Branch("m_pTSumMag",&m_pTSumMag);
+    m_Tree->Branch("m_pTSumEta",&m_pTSumEta);
+    m_Tree->Branch("m_pTSumPhi",&m_pTSumPhi);
 }

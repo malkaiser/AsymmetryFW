@@ -33,10 +33,11 @@ class CLoop {
    void Style(double lumFactor);
    void ActivateBranches(const std::string& key);
    void Fill(double weight, int z_sample, const std::string& sampleName, const std::string& usr_signCon, const std::string& usr_isoRNN, const std::string& usr_lepCharge, const std::string& usr_prongness);
-   void FillTree(double weight, int z_sample, const std::string& sampleName);
+   void FillTree(double weight, int z_sample, const std::string& sampleName, const std::string& usr_signCon, const std::string& usr_isoRNN, const std::string& usr_lepCharge, const std::string& usr_prongness);
    void createOutputFile(const std::string& key);
    CLoop(TTree *tree=0,std::string sample_name="");
    ~CLoop();
+   bool     PassPreSelection(const std::string& usr_signCon, const std::string& usr_isoRNN, const std::string& usr_lepCharge, const std::string& usr_prongness);
    Int_t    Cut(/*Long64_t entry*/);
    Int_t    GetEntry(Long64_t entry);
    Long64_t LoadTree(Long64_t entry);

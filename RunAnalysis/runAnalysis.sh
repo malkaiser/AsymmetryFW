@@ -1,4 +1,4 @@
-var="../HiggsM3Star"
+var="../Test"
 echo ""
 echo "Outputting to ${var}"
 
@@ -14,7 +14,7 @@ echo "Are you absolutely sure you wish to proceed?"
 read varInput
 if [ $varInput == "yes" ]
 then
-    python3 RunAnalysis.py --sign oppSign --charge negative --isoRNN failedORLNT --prongness one --singleSample data_2015_0 --outputDir $var --j 64 --verbosity INFO --treeName NOMINAL --jobType h
+    python3 RunAnalysis.py --sign oppSign --charge positive --isoRNN passed --prongness three --singleSample Ztautau_2015_0 --outputDir $var --j 64 --verbosity INFO --treeName NOMINAL --jobType h
 
 else
     echo "Invalid input \"$varInput\"!"
