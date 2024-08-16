@@ -71,7 +71,7 @@ if [ -d $var ]; then
   echo -e "####################################################${NC}"]
   echo "exiting..."
 else
-  python3 RunAnalysis.py --sign $1 --isoRNN $2 --charge $3 --prongness $4 --samples All --outputDir $var --j 128 --verbosity INFO --treeName NOMINAL --jobType h
+  python3 RunAnalysis.py --sign $1 --isoRNN $2 --charge $3 --prongness $4 --samples All --outputDir $var --j 192 --verbosity INFO --treeName NOMINAL --jobType h
   cp ../Automatic/concatenate.sh $var/NOMINAL/
   cd $var/NOMINAL/
   bash concatenate.sh

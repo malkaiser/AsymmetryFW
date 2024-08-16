@@ -56,7 +56,7 @@ histogramContainer m_ljettauContainer{"m_jtau", "Mass of ljet tau",300,0,300,not
 histogramContainer mWTContainer{"mWT","Reconstructed W transverse mass",160,0,160,cutNames,"mWT"};
 histogramContainer mETContainer{"mET","Reconstructed missing transverse energy",300,0,300,notFull};
 
-histogramContainer ZTTBDTContainer{"ZTTBDT Score","ZTTBDT Score", 200, -1, 1, cutNames,"bdtscore"}; // 
+histogramContainer ZTTBDTContainer{"bdtscore","ZTTBDT Score", 200, -1, 1, cutNames,"bdtscore"}; // 
 
 // W+Jets
 /*

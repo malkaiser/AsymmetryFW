@@ -27,17 +27,25 @@ class OutputTree {
     double m_met_pT;
     double m_event_number;
     double m_m_vis;
-    float m_sigmaCosDelPhi;
     float m_m3;
     float m_mWT;
     float m_m_jtau;
-    float m_pT_asymm;
-    float m_d_zeta;
     float m_delta_phiTauLep;
     float m_delta_phiTauMet;
-    float m_ratioMetTauPT;
     float m_etaSeparation;
     float m_pTSumEta;
     float m_pTSumPhi;
     float m_pTSumMag;
+
+    // Used
+    float m_sigmaCosDelPhi;
+    float m_d_zeta;
+    float m_pT_asymm;
+    float m_ratioMetTauPT;
+    float m_ratioMuonTauPT;
+    float m_ratioMetMuonPT;
+    
+    float m_ratioMuonTauM3;
+    float m_ratioMuonMetM3;
+    float m_ratioMetTauM3;
 };

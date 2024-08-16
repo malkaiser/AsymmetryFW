@@ -16,6 +16,8 @@ float pTAsymm(TLorentzVector* lepton, TLorentzVector* tau);
 float deltaR(TLorentzVector* lepton, TLorentzVector* tau);
 float DZeta(TLorentzVector* tau, TLorentzVector* muon, TLorentzVector* met);
 float EtaSeparation(TLorentzVector* tau, TLorentzVector* muon);
+float myTransverseMass2(TLorentzVector* vector1, TLorentzVector* vector2);
+
 TVector3 VectorialSum(TLorentzVector* tau, TLorentzVector* muon);
 
 bool CLoop::PassPreSelection(const std::string& usr_signCon, const std::string& usr_isoRNN, const std::string& usr_lepCharge, const std::string& usr_prongness){
@@ -119,13 +121,19 @@ void CLoop::Fill(double weight, int z_sample, const std::string& sampleName, con
     float delta_R_met_muon = deltaR(muon_0_p4, met_reco_p4);
     float d_zeta = DZeta(tau_0_p4, muon_0_p4, met_reco_p4);
     float ratioMetTauPT = met_reco_p4->E()/tau_0_p4->Pt();
+    float ratioMetMuonPT = met_reco_p4->E()/muon_0_p4->Pt();
+    float ratioMuonTauPT = muon_0_p4->Pt()/tau_0_p4->Pt();
+
     float etaSeparation = EtaSeparation(tau_0_p4, muon_0_p4);
     TVector3 pT_sum = VectorialSum(tau_0_p4,muon_0_p4);
     if (muon_0_q < 0) {m3 = m3_star(met_reco_p4, muon_0_p4, tau_0_p4);}
     if (muon_0_q > 0) {m3 = m3_star(met_reco_p4, tau_0_p4, muon_0_p4);}
-    m_vbfBDT.update(met_reco_p4->Pt(), mWT, sigmaCosDelPhi, pT_asymm, d_zeta, ratioMetTauPT, etaSeparation, pT_sum.Mag(), pT_sum.Phi(), pT_sum.Eta(), event_number);
-    double BDT_score = m_vbfBDT.evaluate();
+    float ratioMuonTauM3 = sqrt(myTransverseMass2(muon_0_p4, tau_0_p4))/m3;
+    float ratioMuonMetM3 = sqrt(myTransverseMass2(muon_0_p4, met_reco_p4))/m3;
+    float ratioMetTauM3 = sqrt(myTransverseMass2(met_reco_p4, tau_0_p4))/m3;
 
+    m_zttBDT.update(d_zeta, pT_asymm, sigmaCosDelPhi, ratioMetTauPT, ratioMuonTauPT, ratioMetMuonPT, ratioMuonTauM3, ratioMuonMetM3, ratioMetTauM3, event_number%2147483647);
+    double BDT_score = m_zttBDT.evaluate();
     // Cuts vector
     std::vector<int> cuts={0,0,0,0,0,0,0,0,0};
     // CUTS
@@ -148,7 +156,7 @@ void CLoop::Fill(double weight, int z_sample, const std::string& sampleName, con
     if (pT_asymm > 0) {cuts[5] = 1;}
     if (tau_0_p4->Pt() > 60) {cuts[6] = 1;}
     if (muon_0_p4->Pt() > 25) {cuts[7] = 1;}
-    if (BDT_score > -0.17) {cuts[8] = 1;}
+    if (BDT_score > -0.2) {cuts[8] = 1;}
 
 
     // SUM OF THE VECTOR STORING IF CUTS PASS OR NOT
@@ -261,11 +269,17 @@ void CLoop::FillTree(double weight, int z_sample, const std::string& sampleName,
     float delta_R_met_muon = deltaR(muon_0_p4, met_reco_p4);
     float d_zeta = DZeta(tau_0_p4, muon_0_p4, met_reco_p4);
     float ratioMetTauPT = met_reco_p4->E()/tau_0_p4->Pt();
+    float ratioMetMuonPT = met_reco_p4->E()/muon_0_p4->Pt();
+    float ratioMuonTauPT = muon_0_p4->Pt()/tau_0_p4->Pt();
     float etaSeparation = EtaSeparation(tau_0_p4, muon_0_p4);
+
     TVector3 pT_sum = VectorialSum(tau_0_p4,muon_0_p4);
     if (muon_0_q < 0) {m3 = m3_star(met_reco_p4, muon_0_p4, tau_0_p4);}
     if (muon_0_q > 0) {m3 = m3_star(met_reco_p4, tau_0_p4, muon_0_p4);}
 
+    float ratioMuonTauM3 = sqrt(myTransverseMass2(muon_0_p4, tau_0_p4))/m3;
+    float ratioMuonMetM3 = sqrt(myTransverseMass2(muon_0_p4, met_reco_p4))/m3;
+    float ratioMetTauM3 = sqrt(myTransverseMass2(met_reco_p4, tau_0_p4))/m3;
     // Cuts vector
     std::vector<int> cuts={0,0,0,0,0,0,0,0};
     // CUTS
@@ -307,19 +321,26 @@ void CLoop::FillTree(double weight, int z_sample, const std::string& sampleName,
         m_signalTree.m_met_pT = met_reco_p4->Pt();
         m_signalTree.m_event_number = event_number;
         m_signalTree.m_m_vis = m_vis;
-        m_signalTree.m_sigmaCosDelPhi = sigmaCosDelPhi;
         m_signalTree.m_m3 = m3;
         m_signalTree.m_mWT = mWT;
         m_signalTree.m_m_jtau = m_jtau;
-        m_signalTree.m_pT_asymm = pT_asymm;
-        m_signalTree.m_d_zeta = d_zeta;
         m_signalTree.m_delta_phiTauLep = del_phi(tau_0_p4->Phi(), muon_0_p4->Phi());
         m_signalTree.m_delta_phiTauMet = del_phi(tau_0_p4->Phi(), met_reco_p4->Phi());
-        m_signalTree.m_ratioMetTauPT = ratioMetTauPT;
         m_signalTree.m_etaSeparation = etaSeparation;
         m_signalTree.m_pTSumEta = pT_sum.Eta();
         m_signalTree.m_pTSumPhi = pT_sum.Phi();
         m_signalTree.m_pTSumMag = pT_sum.Mag();
+
+        m_signalTree.m_sigmaCosDelPhi = sigmaCosDelPhi;
+        m_signalTree.m_pT_asymm = pT_asymm;
+        m_signalTree.m_d_zeta = d_zeta;
+        m_signalTree.m_ratioMetTauPT = ratioMetTauPT;
+        m_signalTree.m_ratioMetMuonPT = ratioMetMuonPT;
+        m_signalTree.m_ratioMuonTauPT = ratioMuonTauPT;
+        m_signalTree.m_ratioMuonTauM3 = ratioMuonTauM3;
+        m_signalTree.m_ratioMuonMetM3 = ratioMuonMetM3;
+        m_signalTree.m_ratioMetTauM3 = ratioMetTauM3;
+
         // Fill tree
         m_signalTree.FillTree();
       }
@@ -330,19 +351,27 @@ void CLoop::FillTree(double weight, int z_sample, const std::string& sampleName,
         m_backgroundTree.m_met_pT = met_reco_p4->Pt();
         m_backgroundTree.m_event_number = event_number;
         m_backgroundTree.m_m_vis = m_vis;
-        m_backgroundTree.m_sigmaCosDelPhi = sigmaCosDelPhi;
         m_backgroundTree.m_m3 = m3;
         m_backgroundTree.m_mWT = mWT;
         m_backgroundTree.m_m_jtau = m_jtau;
-        m_backgroundTree.m_pT_asymm = pT_asymm;
-        m_backgroundTree.m_d_zeta = d_zeta;
         m_backgroundTree.m_delta_phiTauLep = del_phi(tau_0_p4->Phi(), muon_0_p4->Phi());
         m_backgroundTree.m_delta_phiTauMet = del_phi(tau_0_p4->Phi(), met_reco_p4->Phi());
-        m_backgroundTree.m_ratioMetTauPT = ratioMetTauPT;
         m_backgroundTree.m_etaSeparation = etaSeparation;
         m_backgroundTree.m_pTSumEta = pT_sum.Eta();
         m_backgroundTree.m_pTSumPhi = pT_sum.Phi();
         m_backgroundTree.m_pTSumMag = pT_sum.Mag();
+
+
+        m_backgroundTree.m_sigmaCosDelPhi = sigmaCosDelPhi;
+        m_backgroundTree.m_pT_asymm = pT_asymm;
+        m_backgroundTree.m_d_zeta = d_zeta;
+        m_backgroundTree.m_ratioMetTauPT = ratioMetTauPT;
+        m_backgroundTree.m_ratioMetMuonPT = ratioMetMuonPT;
+        m_backgroundTree.m_ratioMuonTauPT = ratioMuonTauPT;
+
+        m_backgroundTree.m_ratioMuonTauM3 = ratioMuonTauM3;
+        m_backgroundTree.m_ratioMuonMetM3 = ratioMuonMetM3;
+        m_backgroundTree.m_ratioMetTauM3 = ratioMetTauM3;
         // Fill tree
         m_backgroundTree.FillTree();
       }

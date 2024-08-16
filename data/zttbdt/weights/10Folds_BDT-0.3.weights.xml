@@ -4,11 +4,11 @@
     <Info name="TMVA Release" value="4.2.1 [262657]"/>
     <Info name="ROOT Release" value="6.32/00 [401408]"/>
     <Info name="Creator" value="htan"/>
-    <Info name="Date" value="Mon Aug 12 11:28:45 2024"/>
+    <Info name="Date" value="Thu Aug 15 09:50:26 2024"/>
     <Info name="Host" value="Linux 6772f6b99311 6.5.0-1022-azure #23~22.04.1-Ubuntu SMP Thu May 9 17:59:24 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux"/>
     <Info name="Dir" value="/gluster/home/htan/ZTTBDT"/>
     <Info name="Training events" value="107732"/>
-    <Info name="TrainingTime" value="3.09944153e-06"/>
+    <Info name="TrainingTime" value="1.90734863e-05"/>
     <Info name="AnalysisType" value="Classification"/>
   </GeneralInfo>
   <Options>
@@ -24,15 +24,16 @@
     <Option name="OutputEnsembling" modified="Yes">None</Option>
     <Option name="SplitExpr" modified="Yes">int([m_event_number])%int(10)</Option>
   </Options>
-  <Variables NVar="8">
-    <Variable VarIndex="0" Expression="m_met_pT" Label="m_met_pT" Title="m_met_pT" Unit="" Internal="m_met_pT" Type="F" Min="1.29616737e-01" Max="1.14901929e+03"/>
-    <Variable VarIndex="1" Expression="m_mWT" Label="m_mWT" Title="m_mWT" Unit="" Internal="m_mWT" Type="F" Min="2.40040215e-04" Max="3.99999657e+01"/>
-    <Variable VarIndex="2" Expression="m_d_zeta" Label="m_d_zeta" Title="m_d_zeta" Unit="" Internal="m_d_zeta" Type="F" Min="-1.85973010e+03" Max="1.22364221e+03"/>
+  <Variables NVar="9">
+    <Variable VarIndex="0" Expression="m_d_zeta" Label="m_d_zeta" Title="m_d_zeta" Unit="" Internal="m_d_zeta" Type="F" Min="-1.85973010e+03" Max="1.22364221e+03"/>
+    <Variable VarIndex="1" Expression="m_pT_asymm" Label="m_pT_asymm" Title="m_pT_asymm" Unit="" Internal="m_pT_asymm" Type="F" Min="1.16390038e-05" Max="9.46852446e-01"/>
+    <Variable VarIndex="2" Expression="m_sigmaCosDelPhi" Label="m_sigmaCosDelPhi" Title="m_sigmaCosDelPhi" Unit="" Internal="m_sigmaCosDelPhi" Type="F" Min="-4.99867573e-02" Max="1.97457731e+00"/>
     <Variable VarIndex="3" Expression="m_ratioMetTauPT" Label="m_ratioMetTauPT" Title="m_ratioMetTauPT" Unit="" Internal="m_ratioMetTauPT" Type="F" Min="1.13642181e-03" Max="1.19963303e+01"/>
-    <Variable VarIndex="4" Expression="m_etaSeparation" Label="m_etaSeparation" Title="m_etaSeparation" Unit="" Internal="m_etaSeparation" Type="F" Min="-4.54272270e+00" Max="4.61262608e+00"/>
-    <Variable VarIndex="5" Expression="m_pTSumMag" Label="m_pTSumMag" Title="m_pTSumMag" Unit="" Internal="m_pTSumMag" Type="F" Min="2.89208579e+00" Max="2.55209106e+03"/>
-    <Variable VarIndex="6" Expression="m_pTSumPhi" Label="m_pTSumPhi" Title="m_pTSumPhi" Unit="" Internal="m_pTSumPhi" Type="F" Min="-3.14139199e+00" Max="3.14157844e+00"/>
-    <Variable VarIndex="7" Expression="m_pTSumEta" Label="m_pTSumEta" Title="m_pTSumEta" Unit="" Internal="m_pTSumEta" Type="F" Min="-7.66828012e+00" Max="7.56654692e+00"/>
+    <Variable VarIndex="4" Expression="m_ratioMuonTauPT" Label="m_ratioMuonTauPT" Title="m_ratioMuonTauPT" Unit="" Internal="m_ratioMuonTauPT" Type="F" Min="2.72991937e-02" Max="9.99976695e-01"/>
+    <Variable VarIndex="5" Expression="m_ratioMetMuonPT" Label="m_ratioMetMuonPT" Title="m_ratioMetMuonPT" Unit="" Internal="m_ratioMetMuonPT" Type="F" Min="1.52266631e-03" Max="2.49829426e+01"/>
+    <Variable VarIndex="6" Expression="m_ratioMuonTauM3" Label="m_ratioMuonTauM3" Title="m_ratioMuonTauM3" Unit="" Internal="m_ratioMuonTauM3" Type="F" Min="1.83517556e-03" Max="9.96654034e-01"/>
+    <Variable VarIndex="7" Expression="m_ratioMuonMetM3" Label="m_ratioMuonMetM3" Title="m_ratioMuonMetM3" Unit="" Internal="m_ratioMuonMetM3" Type="F" Min="1.27644239e-06" Max="2.49402225e-01"/>
+    <Variable VarIndex="8" Expression="m_ratioMetTauM3" Label="m_ratioMetTauM3" Title="m_ratioMetTauM3" Unit="" Internal="m_ratioMetTauM3" Type="F" Min="5.56223167e-05" Max="9.77119267e-01"/>
   </Variables>
   <Spectators NSpec="1">
     <Spectator SpecIndex="0" Expression="m_event_number" Label="m_event_number" Title="I" Unit="" Internal="m_event_number" Type="F" Min="1.13000000e+02" Max="1.21478618e+09"/>

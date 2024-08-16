@@ -21,14 +21,14 @@
 #include <math.h>
 #include <memory>
 #include "HistogramContainer.h"
-#include "VBFBDT.h"
+#include "ZTTBDT.h"
 #include "OutputTree.h"
 #include "CLoopConfig.h"
 
 // Header file for the classes stored in the TTree if any.
 #include <TLorentzVector.h>
 
-class CLoop {
+class CLoop { 
    public :
    void Style(double lumFactor);
    void ActivateBranches(const std::string& key);
@@ -55,7 +55,7 @@ class CLoop {
    #include "DeclareTreeBranches.h"
    // Declare the histograms
    #include "DeclareHistograms.h"
-   VBFBDT m_vbfBDT;
+   ZTTBDT m_zttBDT;
    // Output trees
    OutputTree m_signalTree{"SIGNAL", "Signal TTree"};
    OutputTree m_backgroundTree{"BG", "Background TTree"};

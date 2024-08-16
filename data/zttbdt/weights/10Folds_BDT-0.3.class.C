@@ -10,7 +10,7 @@ Method         : CrossValidation::BDT-0.3
 TMVA Release   : 4.2.1         [262657]
 ROOT Release   : 6.32/00       [401408]
 Creator        : htan
-Date           : Mon Aug 12 11:28:45 2024
+Date           : Thu Aug 15 09:50:26 2024
 Host           : Linux 6772f6b99311 6.5.0-1022-azure #23~22.04.1-Ubuntu SMP Thu May 9 17:59:24 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux
 Dir            : /gluster/home/htan/ZTTBDT
 Training events: 107732
@@ -37,15 +37,16 @@ IgnoreNegWeightsInTraining: "False" [Events with negative weights are ignored in
 
 #VAR -*-*-*-*-*-*-*-*-*-*-*-* variables *-*-*-*-*-*-*-*-*-*-*-*-
 
-NVar 8
-m_met_pT                      m_met_pT                      m_met_pT                      m_met_pT                                                        'F'    [0.129616737366,1149.01928711]
-m_mWT                         m_mWT                         m_mWT                         m_mWT                                                           'F'    [0.000240040215431,39.9999656677]
+NVar 9
 m_d_zeta                      m_d_zeta                      m_d_zeta                      m_d_zeta                                                        'F'    [-1859.73010254,1223.64221191]
+m_pT_asymm                    m_pT_asymm                    m_pT_asymm                    m_pT_asymm                                                      'F'    [1.16390037874e-05,0.946852445602]
+m_sigmaCosDelPhi              m_sigmaCosDelPhi              m_sigmaCosDelPhi              m_sigmaCosDelPhi                                                'F'    [-0.049986757338,1.9745773077]
 m_ratioMetTauPT               m_ratioMetTauPT               m_ratioMetTauPT               m_ratioMetTauPT                                                 'F'    [0.00113642180804,11.9963302612]
-m_etaSeparation               m_etaSeparation               m_etaSeparation               m_etaSeparation                                                 'F'    [-4.54272270203,4.61262607574]
-m_pTSumMag                    m_pTSumMag                    m_pTSumMag                    m_pTSumMag                                                      'F'    [2.89208579063,2552.09106445]
-m_pTSumPhi                    m_pTSumPhi                    m_pTSumPhi                    m_pTSumPhi                                                      'F'    [-3.14139199257,3.1415784359]
-m_pTSumEta                    m_pTSumEta                    m_pTSumEta                    m_pTSumEta                                                      'F'    [-7.66828012466,7.56654691696]
+m_ratioMuonTauPT              m_ratioMuonTauPT              m_ratioMuonTauPT              m_ratioMuonTauPT                                                'F'    [0.0272991936654,0.999976694584]
+m_ratioMetMuonPT              m_ratioMetMuonPT              m_ratioMetMuonPT              m_ratioMetMuonPT                                                'F'    [0.00152266630903,24.9829425812]
+m_ratioMuonTauM3              m_ratioMuonTauM3              m_ratioMuonTauM3              m_ratioMuonTauM3                                                'F'    [0.00183517555706,0.996654033661]
+m_ratioMuonMetM3              m_ratioMuonMetM3              m_ratioMuonMetM3              m_ratioMuonMetM3                                                'F'    [1.27644239001e-06,0.249402225018]
+m_ratioMetTauM3               m_ratioMetTauM3               m_ratioMetTauM3               m_ratioMetTauM3                                                 'F'    [5.56223167223e-05,0.977119266987]
 NSpec 1
 m_event_number                m_event_number                m_event_number                I                                                               'F'    [113,1214786176]
 
@@ -90,10 +91,10 @@ class ReadBDT-0.3 : public IClassifierReader {
    ReadBDT-0.3( std::vector<std::string>& theInputVars )
       : IClassifierReader(),
         fClassName( "ReadBDT-0.3" ),
-        fNvars( 8 )
+        fNvars( 9 )
    {
       // the training input variables
-      const char* inputVars[] = { "m_met_pT", "m_mWT", "m_d_zeta", "m_ratioMetTauPT", "m_etaSeparation", "m_pTSumMag", "m_pTSumPhi", "m_pTSumEta" };
+      const char* inputVars[] = { "m_d_zeta", "m_pT_asymm", "m_sigmaCosDelPhi", "m_ratioMetTauPT", "m_ratioMuonTauPT", "m_ratioMetMuonPT", "m_ratioMuonTauM3", "m_ratioMuonMetM3", "m_ratioMetTauM3" };
 
       // sanity checks
       if (theInputVars.size() <= 0) {
@@ -133,6 +134,8 @@ class ReadBDT-0.3 : public IClassifierReader {
       fVmax[6] = 0;
       fVmin[7] = 0;
       fVmax[7] = 0;
+      fVmin[8] = 0;
+      fVmax[8] = 0;
 
       // initialize input variable types
       fType[0] = 'F';
@@ -143,6 +146,7 @@ class ReadBDT-0.3 : public IClassifierReader {
       fType[5] = 'F';
       fType[6] = 'F';
       fType[7] = 'F';
+      fType[8] = 'F';
 
       // initialize constants
       Initialize();
@@ -172,15 +176,15 @@ class ReadBDT-0.3 : public IClassifierReader {
    char   GetType( int ivar ) const { return fType[ivar]; }
 
    // normalisation of input variables
-   double fVmin[8];
-   double fVmax[8];
+   double fVmin[9];
+   double fVmax[9];
    double NormVariable( double x, double xmin, double xmax ) const {
       // normalise to output range: [-1, 1]
       return 2*(x - xmin)/(xmax - xmin) - 1.0;
    }
 
    // type of input variable: 'F' or 'I'
-   char   fType[8];
+   char   fType[9];
 
    // initialize internal variables
    void Initialize();

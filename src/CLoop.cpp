@@ -26,7 +26,7 @@ void CLoop::Loop(float lumFactor, int z_sample, std::string key, const CLoopConf
     createOutputFile(key);
 
     // Create BDT
-    m_vbfBDT = VBFBDT(config.m_bdtWeightsPath);
+    m_zttBDT = ZTTBDT(config.m_bdtWeightsPath);
 
     // Create TTree
     bool saveHistograms = config.m_saveHistograms;
