@@ -11,7 +11,6 @@ class ZTTBDT {
         m_weightsFilePath = weightsFilePath.c_str();
         m_reader = std::make_unique<TMVA::Reader>("Silent");
 
-        m_reader->AddVariable("m_d_zeta",&m_bdt_d_zeta);
         m_reader->AddVariable("m_pT_asymm",&m_bdt_pT_asymm);
         m_reader->AddVariable("m_sigmaCosDelPhi",&m_bdt_sigmaCosDelPhi);
         m_reader->AddVariable("m_ratioMetTauPT",&m_bdt_ratioMetTauPT);
@@ -22,7 +21,7 @@ class ZTTBDT {
         m_reader->AddVariable("m_ratioMetTauM3",&m_bdt_ratioMetTauM3);
         m_reader->AddSpectator("m_event_number",&m_bdt_event_number);
         
-        m_reader->BookMVA("VBF_BDT", weightsFilePath.c_str());
+        m_reader->BookMVA("ZTT_BDT", weightsFilePath.c_str());
     }
 
     ~ZTTBDT() {}
@@ -33,7 +32,6 @@ class ZTTBDT {
             m_weightsFilePath = other.m_weightsFilePath;
             m_bdt_event_number = other.m_bdt_event_number;
         
-            m_bdt_d_zeta = other.m_bdt_d_zeta;
             m_bdt_pT_asymm = other.m_bdt_pT_asymm;
             m_bdt_sigmaCosDelPhi = other.m_bdt_sigmaCosDelPhi;
             m_bdt_ratioMetTauPT = other.m_bdt_ratioMetTauPT;
@@ -43,7 +41,6 @@ class ZTTBDT {
             m_bdt_ratioMuonMetM3 = other.m_bdt_ratioMuonMetM3;
             m_bdt_ratioMetTauM3 = other.m_bdt_ratioMetTauM3;
 
-            m_reader->AddVariable("m_d_zeta",&m_bdt_d_zeta);
             m_reader->AddVariable("m_pT_asymm",&m_bdt_pT_asymm);
             m_reader->AddVariable("m_sigmaCosDelPhi",&m_bdt_sigmaCosDelPhi);
             m_reader->AddVariable("m_ratioMetTauPT",&m_bdt_ratioMetTauPT);
@@ -59,9 +56,8 @@ class ZTTBDT {
         return *this;
     }
 
-    void update(float d_zeta, float pT_asymm, float sigmaCosDelPhi, float ratioMetTauPT, float ratioMuonTauPT, float ratioMetMuonPT, float ratioMuonTauM3, float ratioMuonMetM3, float ratioMetTauM3, float eventNumber) {
+    void update(float pT_asymm, float sigmaCosDelPhi, float ratioMetTauPT, float ratioMuonTauPT, float ratioMetMuonPT, float ratioMuonTauM3, float ratioMuonMetM3, float ratioMetTauM3, float eventNumber) {
 
-        m_bdt_d_zeta = d_zeta;
         m_bdt_pT_asymm = pT_asymm;
         m_bdt_sigmaCosDelPhi = sigmaCosDelPhi;
         m_bdt_ratioMetTauPT = ratioMetTauPT;
@@ -84,7 +80,6 @@ class ZTTBDT {
     void reset() {
         m_bdt_event_number = 0;
 
-        m_bdt_d_zeta = 0;
         m_bdt_pT_asymm = 0;
         m_bdt_sigmaCosDelPhi = 0;
         m_bdt_ratioMetTauPT = 0;
@@ -98,7 +93,6 @@ class ZTTBDT {
   private:
     std::unique_ptr<TMVA::Reader> m_reader;
     float m_bdt_event_number;
-    float m_bdt_d_zeta;
     float m_bdt_pT_asymm;
     float m_bdt_sigmaCosDelPhi;
     float m_bdt_ratioMetTauPT;

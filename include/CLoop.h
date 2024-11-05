@@ -32,8 +32,8 @@ class CLoop {
    public :
    void Style(double lumFactor);
    void ActivateBranches(const std::string& key);
-   void Fill(double weight, int z_sample, const std::string& sampleName, const std::string& usr_signCon, const std::string& usr_isoRNN, const std::string& usr_lepCharge, const std::string& usr_prongness);
-   void FillTree(double weight, int z_sample, const std::string& sampleName, const std::string& usr_signCon, const std::string& usr_isoRNN, const std::string& usr_lepCharge, const std::string& usr_prongness);
+   void Fill(double weight, int z_sample, const std::string& sampleName, const std::string& usr_signCon, const std::string& usr_isoRNN, const std::string& usr_lepCharge, const std::string& usr_prongness, const std::string& usr_mass);
+   void FillTree(double weight, int z_sample, const std::string& sampleName, const std::string& usr_signCon, const std::string& usr_isoRNN, const std::string& usr_lepCharge, const std::string& usr_prongness, const std::string& usr_mass);
    void createOutputFile(const std::string& key);
    CLoop(TTree *tree=0,std::string sample_name="");
    ~CLoop();
@@ -42,7 +42,7 @@ class CLoop {
    Int_t    GetEntry(Long64_t entry);
    Long64_t LoadTree(Long64_t entry);
    void     Init(TTree *tree,std::string sample_name="");
-   void     Loop(float lumFactor, int z_sample, std::string key, const CLoopConfig& config, std::string usr_signCon, std::string usr_isoRNN, std::string usr_lepCharge, std::string usr_prongness);
+   void     Loop(float lumFactor, int z_sample, std::string key, const CLoopConfig& config, std::string usr_signCon, std::string usr_isoRNN, std::string usr_lepCharge, std::string usr_prongness, std::string usr_mass);
    Bool_t   Notify();
    void     Show(Long64_t entry = -1);
    private:

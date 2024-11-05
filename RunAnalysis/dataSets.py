@@ -14,10 +14,12 @@ except:
         remote = False
 
 try:
-  pathsToSamplesList = v26Paths['SHARED'] # changed USER to 'SHARED'
+  pathsToSamplesList = [v26Paths['SHARED'],v26Paths['Prime']] # changed USER to 'SHARED'
   samples = []
   dirs = []
   for path in pathsToSamplesList:
+    path = path[0]
+    print(path)
     samples += os.listdir(path)
     dirs += [path+i+'/' for i in os.listdir(path) if ('mc' in i or 'data' in i)]
 except FileNotFoundError:
@@ -733,10 +735,21 @@ dataCombos_MC = {
 #VBFHttlp15hm20_truth_2015
 "VBFHttlp15hm20_truth_2015":['VBFHttlp15hm20_truth_2015_0',],
 }
+dataCombos_ZPrime = {
+"ZPrime500_tt": ['ZPrime500_tt_0','ZPrime500_tt_1','ZPrime500_tt_2'],
+"ZPrime450_tt": ['ZPrime450_tt_0','ZPrime450_tt_1','ZPrime450_tt_2'],
+"ZPrime400_tt": ['ZPrime400_tt_0','ZPrime400_tt_1','ZPrime400_tt_2'],    
+"ZPrime350_tt": ['ZPrime350_tt_0','ZPrime350_tt_1','ZPrime350_tt_2'],
+"ZPrime300_tt": ['ZPrime300_tt_0','ZPrime300_tt_1','ZPrime300_tt_2'],
+"ZPrime250_tt": ['ZPrime250_tt_0','ZPrime250_tt_1','ZPrime250_tt_2'],
+"ZPrime200_tt": ['ZPrime200_tt_0','ZPrime200_tt_1','ZPrime200_tt_2'],
+}
+
 
 # Add the two dictionaries together
 dataCombos = dataCombos_MC.copy()
 dataCombos.update(dataCombos_Data)
+dataCombos.update(dataCombos_ZPrime)
 
 # Names of the files by key
 dataSets_Data = {
@@ -3476,6 +3489,39 @@ dataSets_MC = {
 'VBFHttlp15hm20_truth_2015_0':'user.dbaronmo.34673242._000001.TauID_Zll.root',
 }
 
+dataSets_Prime = {
+'ZPrime500_tt_0':"user.dbaronmo.41310575._000001.TauID_Zll.root",
+'ZPrime500_tt_1':'user.dbaronmo.41299125._000001.TauID_Zll.root',
+'ZPrime500_tt_2':'user.dbaronmo.41310575._000001.TauID_Zll.root',
+
+'ZPrime450_tt_0':'user.dbaronmo.41299119._000001.TauID_Zll.root',
+'ZPrime450_tt_1':'user.dbaronmo.41299114._000001.TauID_Zll.root',
+'ZPrime450_tt_2':'user.dbaronmo.41299122._000001.TauID_Zll.root',
+
+'ZPrime400_tt_0':'user.dbaronmo.41299105._000001.TauID_Zll.root',
+'ZPrime400_tt_1':'user.dbaronmo.41299103._000001.TauID_Zll.root',
+'ZPrime400_tt_2':'user.dbaronmo.41299111._000001.TauID_Zll.root',
+
+'ZPrime350_tt_0':'user.dbaronmo.41299094._000001.TauID_Zll.root',
+'ZPrime350_tt_1':'user.dbaronmo.41299092._000001.TauID_Zll.root',
+'ZPrime350_tt_2':'user.dbaronmo.41299099._000001.TauID_Zll.root',
+
+'ZPrime300_tt_0':'user.dbaronmo.41299084._000001.TauID_Zll.root',
+'ZPrime300_tt_1':'user.dbaronmo.41299081._000001.TauID_Zll.root',
+'ZPrime300_tt_2':'user.dbaronmo.41299086._000001.TauID_Zll.root',
+
+'ZPrime250_tt_0':'user.dbaronmo.41299074._000001.TauID_Zll.root',
+'ZPrime250_tt_1':'user.dbaronmo.41299071._000001.TauID_Zll.root',
+'ZPrime250_tt_2':'user.dbaronmo.41299077._000001.TauID_Zll.root',
+
+'ZPrime200_tt_0':'user.dbaronmo.41299062._000001.TauID_Zll.root',
+'ZPrime200_tt_1':'user.dbaronmo.41299058._000001.TauID_Zll.root',
+'ZPrime200_tt_2':'user.dbaronmo.41299065._000001.TauID_Zll.root',
+
+}
+
+
 # Add the two dictionaries together
 dataSets = dataSets_MC.copy()
 dataSets.update(dataSets_Data)
+dataSets.update(dataSets_Prime)

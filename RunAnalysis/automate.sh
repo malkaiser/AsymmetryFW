@@ -2,62 +2,65 @@ if [ $1 == "oppSign" ]; then
   if [ $2 == "passed" ]; then
     if [ $3 == "positive" ]; then
       if [ $4 == "one" ]; then
-        var="../HighMassBDT/SignalRegion/PositiveLepton/OneProng"
+        var="../${5}/SignalRegion/PositiveLepton/OneProng"
       elif [ $4 == "three" ]; then
-        var="../HighMassBDT/SignalRegion/PositiveLepton/ThreeProng"
+        var="../${5}/SignalRegion/PositiveLepton/ThreeProng"
       fi
     elif [ $3 == "negative" ]; then
       if [ $4 == "one" ]; then
-        var="../HighMassBDT/SignalRegion/NegativeLepton/OneProng"
+        var="../${5}/SignalRegion/NegativeLepton/OneProng"
       elif [ $4 == "three" ]; then
-        var="../HighMassBDT/SignalRegion/NegativeLepton/ThreeProng"
+        var="../${5}/SignalRegion/NegativeLepton/ThreeProng"
       fi
     fi
-  else # $2 == negative
+  elif [ $2 == "failedORLNT" ]; then
     if [ $3 == "positive" ]; then
       if [ $4 == "one" ]; then
-        var="../HighMassBDT/FailedIsoORLNT/PositiveLepton/OneProng"
+        var="../${5}/FailedORLNT/PositiveLepton/OneProng"
       elif [ $4 == "three" ]; then
-        var="../HighMassBDT/FailedIsoORLNT/PositiveLepton/ThreeProng"
+        var="../${5}/FailedORLNT/PositiveLepton/ThreeProng"
       fi
     elif [ $3 == "negative" ]; then
       if [ $4 == "one" ]; then
-        var="../HighMassBDT/FailedIsoORLNT/NegativeLepton/OneProng"
+        var="../${5}/FailedORLNT/NegativeLepton/OneProng"
       elif [ $4 == "three" ]; then
-        var="../HighMassBDT/FailedIsoORLNT/NegativeLepton/ThreeProng"
+        var="../${5}/FailedORLNT/NegativeLepton/ThreeProng"
+      fi
+    fi
+  fi
+elif [ $1 == "sameSign" ]; then
+  if [ $2 == "passed" ]; then
+    if [ $3 == "positive" ]; then
+      if [ $4 == "one" ]; then
+        var="../${5}/SameSign/PositiveLepton/OneProng"
+      elif [ $4 == "three" ]; then
+        var="../${5}/SameSign/PositiveLepton/ThreeProng"
+      fi
+    elif [ $3 == "negative" ]; then
+      if [ $4 == "one" ]; then
+        var="../${5}/SameSign/NegativeLepton/OneProng"
+      elif [ $4 == "three" ]; then
+        var="../${5}/SameSign/NegativeLepton/ThreeProng"
+      fi
+    fi
+  elif [ $2 == "failedORLNT" ]; then
+    if [ $3 == "positive" ]; then
+      if [ $4 == "one" ]; then
+        var="../${5}/BothInverted/PositiveLepton/OneProng"
+      elif [ $4 == "three" ]; then
+        var="../${5}/BothInverted/PositiveLepton/ThreeProng"
+      fi
+    elif [ $3 == "negative" ]; then
+      if [ $4 == "one" ]; then
+        var="../${5}/BothInverted/NegativeLepton/OneProng"
+      elif [ $4 == "three" ]; then
+        var="../${5}/BothInverted/NegativeLepton/ThreeProng"
       fi
     fi
   fi
 else
-  if [ $2 == "passed" ]; then
-    if [ $3 == "positive" ]; then
-      if [ $4 == "one" ]; then
-        var="../HighMassBDT/SameSign/PositiveLepton/OneProng"
-      elif [ $4 == "three" ]; then
-        var="../HighMassBDT/SameSign/PositiveLepton/ThreeProng"
-      fi
-    elif [ $3 == "negative" ]; then
-      if [ $4 == "one" ]; then
-        var="../HighMassBDT/SameSign/NegativeLepton/OneProng"
-      elif [ $4 == "three" ]; then
-        var="../HighMassBDT/SameSign/NegativeLepton/ThreeProng"
-      fi
-    fi
-  else
-    if [ $3 == "positive" ]; then
-      if [ $4 == "one" ]; then
-        var="../HighMassBDT/BothInverted/PositiveLepton/OneProng"
-      elif [ $4 == "three" ]; then
-        var="../HighMassBDT/BothInverted/PositiveLepton/ThreeProng"
-      fi
-    elif [ $3 == "negative" ]; then
-      if [ $4 == "one" ]; then
-        var="../HighMassBDT/BothInverted/NegativeLepton/OneProng"
-      elif [ $4 == "three" ]; then
-        var="../HighMassBDT/BothInverted/NegativeLepton/ThreeProng"
-      fi
-    fi
-  fi
+  echo "Invalid input!"
+  exit
 fi
 
 echo ""
@@ -70,11 +73,12 @@ if [ -d $var ]; then
   echo -e "${var} ALREADY EXISTS!"
   echo -e "####################################################${NC}"]
   echo "exiting..."
+
 else
-  python3 RunAnalysis.py --sign $1 --isoRNN $2 --charge $3 --prongness $4 --samples All --outputDir $var --j 192 --verbosity INFO --treeName NOMINAL --jobType h
-  cp ../Automatic/concatenate.sh $var/NOMINAL/
+  python3 RunAnalysis.py --sign $1 --isoRNN $2 --charge $3 --prongness $4 --mass $5 --samples All --outputDir $var --j 256 --verbosity INFO --treeName NOMINAL --jobType n
+  cp ../Automatic/konkatenate.py $var/NOMINAL/
   cd $var/NOMINAL/
-  bash concatenate.sh
+  python3 konkatenate.py --j 64
   cd ..
   rm -r ./NOMINAL
 fi

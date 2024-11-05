@@ -10,7 +10,7 @@ Method         : CrossValidation::BDT-0.3
 TMVA Release   : 4.2.1         [262657]
 ROOT Release   : 6.32/00       [401408]
 Creator        : htan
-Date           : Thu Aug 15 09:50:26 2024
+Date           : Fri Aug 16 14:19:49 2024
 Host           : Linux 6772f6b99311 6.5.0-1022-azure #23~22.04.1-Ubuntu SMP Thu May 9 17:59:24 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux
 Dir            : /gluster/home/htan/ZTTBDT
 Training events: 107732
@@ -37,8 +37,7 @@ IgnoreNegWeightsInTraining: "False" [Events with negative weights are ignored in
 
 #VAR -*-*-*-*-*-*-*-*-*-*-*-* variables *-*-*-*-*-*-*-*-*-*-*-*-
 
-NVar 9
-m_d_zeta                      m_d_zeta                      m_d_zeta                      m_d_zeta                                                        'F'    [-1859.73010254,1223.64221191]
+NVar 8
 m_pT_asymm                    m_pT_asymm                    m_pT_asymm                    m_pT_asymm                                                      'F'    [1.16390037874e-05,0.946852445602]
 m_sigmaCosDelPhi              m_sigmaCosDelPhi              m_sigmaCosDelPhi              m_sigmaCosDelPhi                                                'F'    [-0.049986757338,1.9745773077]
 m_ratioMetTauPT               m_ratioMetTauPT               m_ratioMetTauPT               m_ratioMetTauPT                                                 'F'    [0.00113642180804,11.9963302612]
@@ -91,10 +90,10 @@ class ReadBDT-0.3 : public IClassifierReader {
    ReadBDT-0.3( std::vector<std::string>& theInputVars )
       : IClassifierReader(),
         fClassName( "ReadBDT-0.3" ),
-        fNvars( 9 )
+        fNvars( 8 )
    {
       // the training input variables
-      const char* inputVars[] = { "m_d_zeta", "m_pT_asymm", "m_sigmaCosDelPhi", "m_ratioMetTauPT", "m_ratioMuonTauPT", "m_ratioMetMuonPT", "m_ratioMuonTauM3", "m_ratioMuonMetM3", "m_ratioMetTauM3" };
+      const char* inputVars[] = { "m_pT_asymm", "m_sigmaCosDelPhi", "m_ratioMetTauPT", "m_ratioMuonTauPT", "m_ratioMetMuonPT", "m_ratioMuonTauM3", "m_ratioMuonMetM3", "m_ratioMetTauM3" };
 
       // sanity checks
       if (theInputVars.size() <= 0) {
@@ -134,8 +133,6 @@ class ReadBDT-0.3 : public IClassifierReader {
       fVmax[6] = 0;
       fVmin[7] = 0;
       fVmax[7] = 0;
-      fVmin[8] = 0;
-      fVmax[8] = 0;
 
       // initialize input variable types
       fType[0] = 'F';
@@ -146,7 +143,6 @@ class ReadBDT-0.3 : public IClassifierReader {
       fType[5] = 'F';
       fType[6] = 'F';
       fType[7] = 'F';
-      fType[8] = 'F';
 
       // initialize constants
       Initialize();
@@ -176,15 +172,15 @@ class ReadBDT-0.3 : public IClassifierReader {
    char   GetType( int ivar ) const { return fType[ivar]; }
 
    // normalisation of input variables
-   double fVmin[9];
-   double fVmax[9];
+   double fVmin[8];
+   double fVmax[8];
    double NormVariable( double x, double xmin, double xmax ) const {
       // normalise to output range: [-1, 1]
       return 2*(x - xmin)/(xmax - xmin) - 1.0;
    }
 
    // type of input variable: 'F' or 'I'
-   char   fType[9];
+   char   fType[8];
 
    // initialize internal variables
    void Initialize();

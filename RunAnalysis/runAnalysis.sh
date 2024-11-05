@@ -14,7 +14,7 @@ echo "Are you absolutely sure you wish to proceed?"
 read varInput
 if [ $varInput == "yes" ]
 then
-    python3 RunAnalysis.py --sign oppSign --charge positive --isoRNN passed --prongness three --singleSample Ztautau_2015_0 --outputDir $var --j 64 --verbosity DEBUG --treeName NOMINAL --jobType n
+    python3 RunAnalysis.py --sign oppSign --charge positive --isoRNN passed --prongness three --samples All --outputDir $var --j 64 --verbosity DEBUG --treeName NOMINAL --jobType hnr
 
 else
     echo "Invalid input \"$varInput\"!"

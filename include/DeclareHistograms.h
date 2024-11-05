@@ -50,6 +50,8 @@ histogramContainer pTSumEtaContainer{"pTSumEta","Eta of sum of tau and lep pT",2
 histogramContainer pTSumPhiContainer{"pTSumPhi","Phi of sum of tau and lep pT",640,-3.2,3.2,notFull};
 // SR
 
+histogramContainer m_collinearContainer{"m_collinear","Reconstructed collinear approximation mass",300,0,300,notFull};
+histogramContainer truth_m_zContainer{"truth_m_z","True Z mass",300,0,300,notFull};
 histogramContainer m3_starContainer{"m3_star","Novel selection m3_star",300,0,300,cutNames,"m3"}; // m3_star
 histogramContainer m_visContainer{"m_vis", "Visible mass of dilepton",300,0,300,notFull};
 histogramContainer m_ljettauContainer{"m_jtau", "Mass of ljet tau",300,0,300,notFull};
@@ -57,6 +59,9 @@ histogramContainer mWTContainer{"mWT","Reconstructed W transverse mass",160,0,16
 histogramContainer mETContainer{"mET","Reconstructed missing transverse energy",300,0,300,notFull};
 
 histogramContainer ZTTBDTContainer{"bdtscore","ZTTBDT Score", 200, -1, 1, cutNames,"bdtscore"}; // 
+
+// BDT Efficiency
+histogramContainer bdt_against_m3{"bdt_against_m3","bdt_against_m3",300,0,300,notFull}; // BDT_against_m3_star
 
 // W+Jets
 /*

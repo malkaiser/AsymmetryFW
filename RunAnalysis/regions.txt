@@ -1,0 +1,16 @@
+oppSign passed positive three fullmass
+oppSign passed positive one fullmass
+oppSign passed negative three fullmass
+oppSign passed negative one fullmass
+oppSign failedORLNT positive three fullmass
+oppSign failedORLNT positive one fullmass
+oppSign failedORLNT negative three fullmass
+oppSign failedORLNT negative one fullmass
+sameSign passed positive three fullmass
+sameSign passed positive one fullmass
+sameSign passed negative three fullmass
+sameSign passed negative one fullmass
+sameSign failedORLNT positive three fullmass
+sameSign failedORLNT positive one fullmass
+sameSign failedORLNT negative three fullmass
+sameSign failedORLNT negative one fullmass

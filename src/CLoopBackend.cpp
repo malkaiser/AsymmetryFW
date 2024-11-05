@@ -70,6 +70,8 @@ void CLoop::Init(TTree *tree,std::string sample_name)
    tau_0_truth_productionVertex_v = 0;
    truth_Z_p4 = 0;
    weight_mc_v = 0;
+   taulep_0_truth_p4 = 0;
+   tau_0_truth_total_p4 = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -676,6 +678,12 @@ void CLoop::Init(TTree *tree,std::string sample_name)
    fChain->SetBranchAddress("truth_Z_p4", &truth_Z_p4, &b_truth_Z_p4);
    fChain->SetBranchAddress("weight_mc", &weight_mc, &b_weight_mc);
    fChain->SetBranchAddress("weight_mc_v", &weight_mc_v, &b_weight_mc_v);
+   
+   if (sample_name.substr(0,6)=="ZPrime"){
+      fChain->SetBranchAddress("taulep_0_truth_p4", &taulep_0_truth_p4, &b_taulep_0_truth_p4);
+      fChain->SetBranchAddress("tau_0_truth_total_p4", &tau_0_truth_total_p4, &b_tau_0_truth_total_p4);
+   }
+   
    }
 
    Notify();
@@ -837,6 +845,10 @@ void CLoop::ActivateBranches(const std::string& key){
     fChain->SetBranchStatus("event_number",1);   
     fChain->SetBranchStatus("tau_0_truth_pdgId",1);
     fChain->SetBranchStatus("muon_0_matched_pdgId",1);
+      if (key.substr(0,6)=="ZPrime"){
+         fChain->SetBranchStatus("taulep_0_truth_p4",1);
+         fChain->SetBranchStatus("tau_0_truth_total_p4",1);
+      }
     } else {
     fChain->SetBranchStatus("*",0);
     fChain->SetBranchStatus("HLT_mu20_iloose_L1MU15",1);
@@ -918,7 +930,7 @@ void CLoop::ActivateBranches(const std::string& key){
     fChain->SetBranchStatus("tau_0_n_unclassified_tracks",1);
     fChain->SetBranchStatus("tau_0_p4",1);
     fChain->SetBranchStatus("tau_0_q",1);
-    }
+   }
 }
 
 void CLoop::createOutputFile(const std::string& key){

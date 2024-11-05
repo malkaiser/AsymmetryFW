@@ -170,3 +170,32 @@ float EtaSeparation(TLorentzVector* tau, TLorentzVector* muon){
   float eta_separation = tau->Eta()-muon->Eta();
   return eta_separation;
 }
+
+TLorentzVector ReconstructedMuonNeutrino(TLorentzVector* tau, TLorentzVector* muon, TLorentzVector* met){
+  double del_phi_tau_met = del_phi(met->Phi(),tau->Phi());
+  double del_phi_muon_met = del_phi(met->Phi(),muon->Phi());
+  double pT_muon_neutrino = (met->E()*sin(del_phi_tau_met))/(cos(del_phi_tau_met)*sin(del_phi_muon_met)+sin(del_phi_tau_met*cos(del_phi_muon_met)));
+  pT_muon_neutrino = abs(pT_muon_neutrino);
+  TLorentzVector nu_mu_reco_p4 = TLorentzVector();
+  nu_mu_reco_p4.SetPtEtaPhiE(pT_muon_neutrino,0,muon->Phi(),pT_muon_neutrino); // sets transverse components
+  TVector3 muon_boost_vector = muon->BoostVector();
+  nu_mu_reco_p4.Boost(0,0,muon_boost_vector.Z()); // boosts into eta of muon
+  return nu_mu_reco_p4;
+}
+
+TLorentzVector ReconstructedTauNeutrino(TLorentzVector* tau, TLorentzVector* muon, TLorentzVector* met){
+  double del_phi_tau_met = del_phi(met->Phi(),tau->Phi());
+  double del_phi_muon_met = del_phi(met->Phi(),muon->Phi());
+  double pT_tau_neutrino = (met->E()*sin(del_phi_muon_met))/(cos(del_phi_tau_met)*sin(del_phi_muon_met)+sin(del_phi_tau_met*cos(del_phi_muon_met)));
+  pT_tau_neutrino = abs(pT_tau_neutrino);
+  TLorentzVector nu_tau_reco_p4 = TLorentzVector(); 
+  nu_tau_reco_p4.SetPtEtaPhiE(pT_tau_neutrino,0,tau->Phi(),pT_tau_neutrino); // sets transverse components
+  TVector3 tau_boost_vector = tau->BoostVector();
+  nu_tau_reco_p4.Boost(0,0,tau_boost_vector.Z()); // boosts into eta of tau
+  return nu_tau_reco_p4;
+}
+
+double FourBodyRecoInvariantMass(TLorentzVector* tau, TLorentzVector* muon, TLorentzVector& nu_tau, TLorentzVector& nu_mu){
+  TLorentzVector sum = (*tau) + (*muon) + nu_tau + nu_mu;
+  return sum.M();
+}

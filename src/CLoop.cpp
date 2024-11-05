@@ -6,7 +6,7 @@
 
 std::vector<std::string> split(const std::string& s, char delimiter);
 
-void CLoop::Loop(float lumFactor, int z_sample, std::string key, const CLoopConfig& config, std::string usr_signCon, std::string usr_isoRNN, std::string usr_lepCharge, std::string usr_prongness)
+void CLoop::Loop(float lumFactor, int z_sample, std::string key, const CLoopConfig& config, std::string usr_signCon, std::string usr_isoRNN, std::string usr_lepCharge, std::string usr_prongness, std::string usr_mass)
 {
     clock_t startTime = clock(); // get start time
 
@@ -68,8 +68,8 @@ void CLoop::Loop(float lumFactor, int z_sample, std::string key, const CLoopConf
         }
         // fill histograms
         //cout << eventWeight;
-        if (saveHistograms) Fill(eventWeight, z_sample, key, usr_signCon, usr_isoRNN, usr_lepCharge, usr_prongness);
-        if (saveEvents) FillTree(eventWeight, z_sample, key, usr_signCon, usr_isoRNN, usr_lepCharge, usr_prongness);
+        if (saveHistograms) Fill(eventWeight, z_sample, key, usr_signCon, usr_isoRNN, usr_lepCharge, usr_prongness, usr_mass);
+        if (saveEvents) FillTree(eventWeight, z_sample, key, usr_signCon, usr_isoRNN, usr_lepCharge, usr_prongness, usr_mass);
         // end filling
 
     }
