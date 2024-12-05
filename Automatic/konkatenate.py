@@ -69,29 +69,25 @@ def concatenate(process):
         os.system("hadd ZPrime200_MG.root ZPrime200*.root")
         os.system("mv ZPrime200_MG.root ../Root/")
 
-    elif process == "ZPrime250":
+    elif process == "ZPrime":
         os.system("hadd ZPrime250_MG.root ZPrime250*.root")
         os.system("mv ZPrime250_MG.root ../Root/")
-
-    elif process == "ZPrime300":
         os.system("hadd ZPrime300_MG.root ZPrime300*.root")
         os.system("mv ZPrime300_MG.root ../Root/")
-
-    elif process == "ZPrime350":
         os.system("hadd ZPrime350_MG.root ZPrime350*.root")
         os.system("mv ZPrime350_MG.root ../Root/")
-
-    elif process == "ZPrime400":
         os.system("hadd ZPrime400_MG.root ZPrime400*.root")
         os.system("mv ZPrime400_MG.root ../Root/")
-
-    elif process == "ZPrime450":
         os.system("hadd ZPrime450_MG.root ZPrime450*.root")
         os.system("mv ZPrime450_MG.root ../Root/")
-
-    elif process == "ZPrime500":
         os.system("hadd ZPrime500_MG.root ZPrime500*.root")
         os.system("mv ZPrime500_MG.root ../Root/")
+
+    elif process == "Z_SM_tt":
+        os.system("hadd Z_SM_tt_hm.root Z_SM_tt_hm*.root")
+        os.system("mv Z_SM_tt_hm.root ../Root/")
+        os.system("hadd Z_SM_tt_lm.root Z_SM_tt_lm*.root")
+        os.system("mv Z_SM_tt_lm.root ../Root/")
 
     elif process == "data":
         os.system("hadd data.root data*.root")
@@ -120,7 +116,7 @@ if __name__ == "__main__":
     nCPU = args.j
     print("nCpus = "+str(nCPU))
 
-    procTuple = ["gg_Higgs","singletop","ttbar","VBF_PoPy","VBF_sherpa","Wjets","Zee_PoPy","Zmumu_PoPy","Ztautau_PoPy","Ztautau_MG","Ztautau_MGNLO","Ztautau_sherpa","Ztautau_SherpaNLO","VV","ZPrime200","ZPrime250","ZPrime300","ZPrime350","ZPrime400","ZPrime450","ZPrime500","data"]
+    procTuple = ["gg_Higgs","singletop","ttbar","VBF_PoPy","VBF_sherpa","Wjets","Zee_PoPy","Zmumu_PoPy","Ztautau_PoPy","Ztautau_MG","Ztautau_MGNLO","Ztautau_sherpa","Ztautau_SherpaNLO","VV","ZPrime","Z_SM_tt","data"]
 
     os.system("mkdir -p ../Root/")
     print("Running...\n")

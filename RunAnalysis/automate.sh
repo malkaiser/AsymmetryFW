@@ -13,18 +13,18 @@ if [ $1 == "oppSign" ]; then
         var="../${5}/SignalRegion/NegativeLepton/ThreeProng"
       fi
     fi
-  elif [ $2 == "failedORLNT" ]; then
+  elif [ $2 == "failed" ]; then
     if [ $3 == "positive" ]; then
       if [ $4 == "one" ]; then
-        var="../${5}/FailedORLNT/PositiveLepton/OneProng"
+        var="../${5}/FailedIso/PositiveLepton/OneProng"
       elif [ $4 == "three" ]; then
-        var="../${5}/FailedORLNT/PositiveLepton/ThreeProng"
+        var="../${5}/FailedIso/PositiveLepton/ThreeProng"
       fi
     elif [ $3 == "negative" ]; then
       if [ $4 == "one" ]; then
-        var="../${5}/FailedORLNT/NegativeLepton/OneProng"
+        var="../${5}/FailedIso/NegativeLepton/OneProng"
       elif [ $4 == "three" ]; then
-        var="../${5}/FailedORLNT/NegativeLepton/ThreeProng"
+        var="../${5}/FailedIso/NegativeLepton/ThreeProng"
       fi
     fi
   fi
@@ -43,7 +43,7 @@ elif [ $1 == "sameSign" ]; then
         var="../${5}/SameSign/NegativeLepton/ThreeProng"
       fi
     fi
-  elif [ $2 == "failedORLNT" ]; then
+  elif [ $2 == "failed" ]; then
     if [ $3 == "positive" ]; then
       if [ $4 == "one" ]; then
         var="../${5}/BothInverted/PositiveLepton/OneProng"
@@ -75,7 +75,7 @@ if [ -d $var ]; then
   echo "exiting..."
 
 else
-  python3 RunAnalysis.py --sign $1 --isoRNN $2 --charge $3 --prongness $4 --mass $5 --samples All --outputDir $var --j 256 --verbosity INFO --treeName NOMINAL --jobType n
+  python3 RunAnalysis.py --sign $1 --isoRNN $2 --charge $3 --prongness $4 --mass $5 --samples All --outputDir $var --j 256 --verbosity INFO --treeName NOMINAL --jobType hn
   cp ../Automatic/konkatenate.py $var/NOMINAL/
   cd $var/NOMINAL/
   python3 konkatenate.py --j 64

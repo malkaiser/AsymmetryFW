@@ -53,28 +53,21 @@ bool CLoop::PassPreSelection(const std::string& usr_signCon, const std::string& 
   bool electron_id=elec_0_id_medium;
   bool muon_id=muon_0_id_medium;
   bool signCondition;
-  if (usr_signCon =="oppSign")
-    signCondition = (ql != qtau);
-  if (usr_signCon =="sameSign")
-    signCondition = (ql == qtau);
+  if (usr_signCon =="oppSign") {signCondition = (ql != qtau);}
+  if (usr_signCon =="sameSign") {signCondition = (ql == qtau);}
 
   bool lepCharge;
-  if (usr_lepCharge =="positive")
-    lepCharge = (ql > 0);
-  if (usr_lepCharge =="negative")
-    lepCharge = (ql < 0);
+  if (usr_lepCharge =="positive") {lepCharge = (ql > 0);}
+  if (usr_lepCharge =="negative") {lepCharge = (ql < 0);}
   
   bool isoRNN;
-  if (usr_isoRNN == "passed")
-    isoRNN = (tight_muon);
-  if (usr_isoRNN == "failedORLNT")
-    isoRNN = (!tight_muon || loose_but_not_tight);
+  if (usr_isoRNN == "passed") {isoRNN = (tight_muon);}
+  if (usr_isoRNN == "failedORLNT") {isoRNN = (!tight_muon || loose_but_not_tight);}
+  if (usr_isoRNN == "failed") {!tight_muon; }
 
   bool prongness;
-  if (usr_prongness == "three")
-    prongness = (tau_0_n_charged_tracks == 3);
-  if (usr_prongness == "one")
-    prongness = (tau_0_n_charged_tracks == 1);
+  if (usr_prongness == "three") {prongness = (tau_0_n_charged_tracks == 3);}
+  if (usr_prongness == "one") {prongness = (tau_0_n_charged_tracks == 1);}
   if (signCondition && isoRNN && lepCharge && prongness && muon_0_p4->Pt() > 27 && one_muon && n_taus==1 && muon_id && no_bjets && tau_eta){
     return true;
   }
@@ -143,7 +136,7 @@ void CLoop::Fill(double weight, int z_sample, const std::string& sampleName, con
     // Cuts vector
     std::vector<int> cuts={0,0,0,0,0,0,0,0,0};
     // CUTS
-    // ORDER MATTERS, CHECK CUTNAMES VECTOR IN DECLARE HISTOGRAMS
+    // ORDER MATTERS, CHECK CUTNAMES VECTOR IN DECLARE 
     if (usr_isoRNN == "failedORLNT") {
       cuts[0] = 1;
       cuts[1] = 1;
@@ -169,10 +162,10 @@ void CLoop::Fill(double weight, int z_sample, const std::string& sampleName, con
     else if (usr_mass == "fullmass") {cuts[3] =1; }
     if (mWT < 40) {cuts[4] = 1;}
     if (pT_asymm > 0) {cuts[5] = 1;}
-    if (tau_0_p4->Pt() > 60) {cuts[6] = 1;}
-    //if (muon_0_p4->Pt() > 25) 
-    {cuts[7] = 1;}
-    if (BDT_score > -0.2) {cuts[8] = 1;}  
+    //if (tau_0_p4->Pt() > 60) 
+    {cuts[6] = 1;}
+    if (muon_0_p4->Pt() > 25) {cuts[7] = 1;}
+    if (muon_0_p4->Pt() > 25) {cuts[8] = 1;}
 
 
     // SUM OF THE VECTOR STORING IF CUTS PASS OR NOT
@@ -346,7 +339,7 @@ void CLoop::FillTree(double weight, int z_sample, const std::string& sampleName,
     std::vector<int> notFullCutsVector{1,static_cast<int>(passedAllCuts)};
 
     if (passedAllCuts && (sampleName.substr(0,4)!="data")){
-      if (sampleName.substr(0,7)=="Ztautau" || sampleName.substr(0,6)=="ZPrime"){
+      if (sampleName.substr(0,7)=="Ztautau" || sampleName.substr(0,6)=="ZPrime" || sampleName.substr(0,7)=="Z_SM_tt"){
         m_signalTree.m_mcWeight = weight;
         m_signalTree.m_event_number = event_number;
 
@@ -407,9 +400,9 @@ void CLoop::FillTree(double weight, int z_sample, const std::string& sampleName,
           m_signalTree.m_truth_m_z = true_Z_mass;
           m_signalTree.m_truth_m_z_norm = true_Z_mass/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
         }
-        else if (sampleName.substr(0,6)=="ZPrime"){
+        else if (sampleName.substr(0,6)=="ZPrime" || sampleName.substr(0,7)=="Z_SM_tt"){
           m_signalTree.m_truth_m_z = visible_mass(taulep_0_truth_p4, tau_0_truth_total_p4);
-          m_signalTree.m_truth_m_z_norm = 0;
+          m_signalTree.m_truth_m_z_norm = visible_mass(taulep_0_truth_p4, tau_0_truth_total_p4)/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
         }
         // Fill tree
         m_signalTree.FillTree();
@@ -429,7 +422,7 @@ void CLoop::FillTree(double weight, int z_sample, const std::string& sampleName,
 
         m_backgroundTree.m_tau_nu_pT = nu_tau->Pt();
         m_backgroundTree.m_lep_nu_pT = nu_mu->Pt();
-
+        
         m_backgroundTree.m_tau_eta = tau_0_p4->Eta();
         m_backgroundTree.m_lep_eta = muon_0_p4->Eta();
         m_backgroundTree.m_met_eta = met_reco_p4->Eta();
@@ -437,10 +430,14 @@ void CLoop::FillTree(double weight, int z_sample, const std::string& sampleName,
         m_backgroundTree.m_delta_phiTauLep = del_phi(tau_0_p4->Phi(), muon_0_p4->Phi());
         m_backgroundTree.m_delta_phiLepMet = del_phi(met_reco_p4->Phi(), muon_0_p4->Phi());
         m_backgroundTree.m_delta_phiTauMet = del_phi(tau_0_p4->Phi(), met_reco_p4->Phi());
-        
+
         m_backgroundTree.m_mtransTauLep = sqrt(myTransverseMass2(tau_0_p4,muon_0_p4));
         m_backgroundTree.m_mtransTauMet = sqrt(myTransverseMass2(tau_0_p4,met_reco_p4));
         m_backgroundTree.m_mtransLepMet = sqrt(myTransverseMass2(met_reco_p4,muon_0_p4));
+
+        m_backgroundTree.m_mtransTauLep_norm = sqrt(myTransverseMass2(tau_0_p4,muon_0_p4))/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
+        m_backgroundTree.m_mtransTauMet_norm = sqrt(myTransverseMass2(tau_0_p4,met_reco_p4))/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
+        m_backgroundTree.m_mtransLepMet_norm = sqrt(myTransverseMass2(met_reco_p4,muon_0_p4))/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
 
         m_backgroundTree.m_ljet_0_pT = ljet_0_p4->Pt();
         m_backgroundTree.m_ljet_1_pT = ljet_1_p4->Pt();
@@ -451,7 +448,10 @@ void CLoop::FillTree(double weight, int z_sample, const std::string& sampleName,
         m_backgroundTree.m_mWT = mWT;
         m_backgroundTree.m_mcollinear = m_col_approx;
         m_backgroundTree.m_mtransverse = m_transverse;
-        
+
+        m_backgroundTree.m_m3_norm = m3/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
+        m_backgroundTree.m_mcollinear_norm = m_col_approx/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
+        // ClassifierBDT
         m_backgroundTree.m_sigmaCosDelPhi = sigmaCosDelPhi;
         m_backgroundTree.m_pT_asymm = pT_asymm;
         m_backgroundTree.m_ratioMetTauPT = ratioMetTauPT;
@@ -460,10 +460,71 @@ void CLoop::FillTree(double weight, int z_sample, const std::string& sampleName,
         m_backgroundTree.m_ratioMuonTauM3 = ratioMuonTauM3;
         m_backgroundTree.m_ratioMuonMetM3 = ratioMuonMetM3;
         m_backgroundTree.m_ratioMetTauM3 = ratioMetTauM3;
+
         m_backgroundTree.m_truth_m_z = 0;
+        m_backgroundTree.m_truth_m_z_norm = 0;
         // Fill tree
         m_backgroundTree.FillTree();
       }
+    }
+    else if (passedAllCuts && (sampleName.substr(0,4)=="data")){
+      m_dataTree.m_mcWeight = weight;
+      m_dataTree.m_event_number = event_number;
+
+      m_dataTree.m_pT_sum = tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt();
+      m_dataTree.m_tau_pT = tau_0_p4->Pt();
+      m_dataTree.m_lep_pT = muon_0_p4->Pt();
+      m_dataTree.m_met_pT = met_reco_p4->Pt();
+
+      m_dataTree.m_tau_pT_norm = tau_0_p4->Pt()/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
+      m_dataTree.m_lep_pT_norm = muon_0_p4->Pt()/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
+      m_dataTree.m_met_pT_norm = met_reco_p4->Pt()/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
+
+      m_dataTree.m_tau_nu_pT = nu_tau->Pt();
+      m_dataTree.m_lep_nu_pT = nu_mu->Pt();
+      
+      m_dataTree.m_tau_eta = tau_0_p4->Eta();
+      m_dataTree.m_lep_eta = muon_0_p4->Eta();
+      m_dataTree.m_met_eta = met_reco_p4->Eta();
+
+      m_dataTree.m_delta_phiTauLep = del_phi(tau_0_p4->Phi(), muon_0_p4->Phi());
+      m_dataTree.m_delta_phiLepMet = del_phi(met_reco_p4->Phi(), muon_0_p4->Phi());
+      m_dataTree.m_delta_phiTauMet = del_phi(tau_0_p4->Phi(), met_reco_p4->Phi());
+
+      m_dataTree.m_mtransTauLep = sqrt(myTransverseMass2(tau_0_p4,muon_0_p4));
+      m_dataTree.m_mtransTauMet = sqrt(myTransverseMass2(tau_0_p4,met_reco_p4));
+      m_dataTree.m_mtransLepMet = sqrt(myTransverseMass2(met_reco_p4,muon_0_p4));
+
+      m_dataTree.m_mtransTauLep_norm = sqrt(myTransverseMass2(tau_0_p4,muon_0_p4))/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
+      m_dataTree.m_mtransTauMet_norm = sqrt(myTransverseMass2(tau_0_p4,met_reco_p4))/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
+      m_dataTree.m_mtransLepMet_norm = sqrt(myTransverseMass2(met_reco_p4,muon_0_p4))/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
+
+      m_dataTree.m_ljet_0_pT = ljet_0_p4->Pt();
+      m_dataTree.m_ljet_1_pT = ljet_1_p4->Pt();
+      m_dataTree.m_n_jets = n_jets;
+
+      m_dataTree.m_m_vis = m_vis;
+      m_dataTree.m_m3 = m3;
+      m_dataTree.m_mWT = mWT;
+      m_dataTree.m_mcollinear = m_col_approx;
+      m_dataTree.m_mtransverse = m_transverse;
+
+      m_dataTree.m_m3_norm = m3/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
+      m_dataTree.m_mcollinear_norm = m_col_approx/(tau_0_p4->Pt()+muon_0_p4->Pt()+met_reco_p4->Pt());
+      // ClassifierBDT
+      m_dataTree.m_sigmaCosDelPhi = sigmaCosDelPhi;
+      m_dataTree.m_pT_asymm = pT_asymm;
+      m_dataTree.m_ratioMetTauPT = ratioMetTauPT;
+      m_dataTree.m_ratioMetMuonPT = ratioMetMuonPT;
+      m_dataTree.m_ratioMuonTauPT = ratioMuonTauPT;
+      m_dataTree.m_ratioMuonTauM3 = ratioMuonTauM3;
+      m_dataTree.m_ratioMuonMetM3 = ratioMuonMetM3;
+      m_dataTree.m_ratioMetTauM3 = ratioMetTauM3;
+
+      m_dataTree.m_truth_m_z = 0;
+      m_dataTree.m_truth_m_z_norm = 0;
+      // Fill tree
+      m_dataTree.FillTree();
     }
   }
 }

@@ -743,6 +743,9 @@ dataCombos_ZPrime = {
 "ZPrime300_tt": ['ZPrime300_tt_0','ZPrime300_tt_1','ZPrime300_tt_2'],
 "ZPrime250_tt": ['ZPrime250_tt_0','ZPrime250_tt_1','ZPrime250_tt_2'],
 "ZPrime200_tt": ['ZPrime200_tt_0','ZPrime200_tt_1','ZPrime200_tt_2'],
+"Z_SM_tt": ['Z_SM_tt_lm_0','Z_SM_tt_lm_1','Z_SM_tt_lm_2','Z_SM_tt_hm_0','Z_SM_tt_hm_1','Z_SM_tt_hm_2'],
+"Z_SM_mm": ['Z_SM_mm_lm_0','Z_SM_mm_lm_1','Z_SM_mm_lm_2','Z_SM_mm_hm_0','Z_SM_mm_hm_1','Z_SM_mm_hm_2'],
+"Z_SM_ee": ['Z_SM_ee_lm_0','Z_SM_ee_lm_1','Z_SM_ee_lm_2','Z_SM_ee_hm_0','Z_SM_ee_hm_1','Z_SM_ee_hm_2'],
 }
 
 
@@ -3517,6 +3520,27 @@ dataSets_Prime = {
 'ZPrime200_tt_0':'user.dbaronmo.41299062._000001.TauID_Zll.root',
 'ZPrime200_tt_1':'user.dbaronmo.41299058._000001.TauID_Zll.root',
 'ZPrime200_tt_2':'user.dbaronmo.41299065._000001.TauID_Zll.root',
+
+'Z_SM_tt_lm_0' : 'user.dbaronmo.41299252._000001.TauID_Zll.root',
+'Z_SM_tt_lm_1' : 'user.dbaronmo.41299245._000001.TauID_Zll.root',
+'Z_SM_tt_lm_2' : 'user.dbaronmo.41299249._000001.TauID_Zll.root',
+'Z_SM_tt_hm_0' : 'user.dbaronmo.41310573._000001.TauID_Zll.root',
+'Z_SM_tt_hm_1' : 'user.dbaronmo.41299255._000001.TauID_Zll.root',
+'Z_SM_tt_hm_2' : 'user.dbaronmo.41299258._000001.TauID_Zll.root',
+
+'Z_SM_mm_lm_0' : 'user.dbaronmo.41299230._000001.TauID_Zll.root',
+'Z_SM_mm_lm_1' : 'user.dbaronmo.41299222._000001.TauID_Zll.root',
+'Z_SM_mm_lm_2' : 'user.dbaronmo.41299224._000001.TauID_Zll.root',
+'Z_SM_mm_hm_0' : 'user.dbaronmo.41299240._000001.TauID_Zll.root',
+'Z_SM_mm_hm_1' : 'user.dbaronmo.41299233._000001.TauID_Zll.root',
+'Z_SM_mm_hm_2' : 'user.dbaronmo.41299238._000001.TauID_Zll.root',
+
+'Z_SM_ee_lm_0' : 'user.dbaronmo.41299209._000001.TauID_Zll.root',
+'Z_SM_ee_lm_1' : 'user.dbaronmo.41299204._000001.TauID_Zll.root',
+'Z_SM_ee_lm_2' : 'user.dbaronmo.41299207._000001.TauID_Zll.root',
+'Z_SM_ee_hm_0' : 'user.dbaronmo.41299219._000001.TauID_Zll.root',
+'Z_SM_ee_hm_1' : 'user.dbaronmo.41299213._000001.TauID_Zll.root',
+'Z_SM_ee_hm_2' : 'user.dbaronmo.41299215._000001.TauID_Zll.root',
 
 }
 

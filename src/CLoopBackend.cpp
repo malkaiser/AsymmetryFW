@@ -679,7 +679,7 @@ void CLoop::Init(TTree *tree,std::string sample_name)
    fChain->SetBranchAddress("weight_mc", &weight_mc, &b_weight_mc);
    fChain->SetBranchAddress("weight_mc_v", &weight_mc_v, &b_weight_mc_v);
    
-   if (sample_name.substr(0,6)=="ZPrime"){
+   if (sample_name.substr(0,6)=="ZPrime" || sample_name.substr(0,7)=="Z_SM_tt"){
       fChain->SetBranchAddress("taulep_0_truth_p4", &taulep_0_truth_p4, &b_taulep_0_truth_p4);
       fChain->SetBranchAddress("tau_0_truth_total_p4", &tau_0_truth_total_p4, &b_tau_0_truth_total_p4);
    }
@@ -845,7 +845,7 @@ void CLoop::ActivateBranches(const std::string& key){
     fChain->SetBranchStatus("event_number",1);   
     fChain->SetBranchStatus("tau_0_truth_pdgId",1);
     fChain->SetBranchStatus("muon_0_matched_pdgId",1);
-      if (key.substr(0,6)=="ZPrime"){
+      if (key.substr(0,6)=="ZPrime" || key.substr(0,7)=="Z_SM_tt"){
          fChain->SetBranchStatus("taulep_0_truth_p4",1);
          fChain->SetBranchStatus("tau_0_truth_total_p4",1);
       }

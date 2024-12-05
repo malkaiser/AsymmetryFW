@@ -153,7 +153,7 @@ def createArgumentParser():
     executionMode.add_argument("--singleSample", help="Run over a single sample.",type=str,default="")
     executionMode.add_argument("--inputFile", help="Input txt file with a list of samples to run over.",type=str,default="")
     parser.add_argument("--sign", help="Sign of lepton/tau charge (opposite/same).",type=str,choices=["oppSign","sameSign"],default="oppSign")
-    parser.add_argument("--isoRNN", help="Isolation and RNN requirements.",type=str,choices=["passed","failedORLNT"],default="passed")
+    parser.add_argument("--isoRNN", help="Isolation and RNN requirements.",type=str,choices=["passed","failedORLNT", "failed"],default="passed")
     parser.add_argument("--charge", help="Muon charge.",type=str,choices=["positive","negative"],default="positive")
     parser.add_argument("--prongness", help="Tau prongness.",type=str,choices=["three","one"],default="three")
     parser.add_argument("--mass", help="Mass region.",type=str,choices=["highmass","higgsmass","zmass","fullmass"],default="zmass")

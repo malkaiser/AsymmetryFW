@@ -78,6 +78,7 @@ void CLoop::Loop(float lumFactor, int z_sample, std::string key, const CLoopConf
     if (saveEvents) {
         m_outputFile->WriteObject(m_signalTree.GetTree(),"SIGNAL");
         m_outputFile->WriteObject(m_backgroundTree.GetTree(),"BACKGROUND");
+        m_outputFile->WriteObject(m_dataTree.GetTree(),"Data");
     }
     // Add the code to the file if it is the first sample of the kind
     std::vector<std::string> tokens = split(key,'_');
